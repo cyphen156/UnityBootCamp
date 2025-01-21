@@ -1,0 +1,25 @@
+25.01.20
+Install Nessesary Programs
+VS
+VS Code
+Unity6
+
+25.01.21
+3D URP project initiating
+System using
+1. Hierarchy    :   Spectating gameObject List in Sceen
+2. Sceen        :   GameWorld ... Real PlayGround
+3. Game         :   Render Screen 
+4. Inspector    :   GameObject Option Ex) Component
+5. Assets       :   Resource
+6. Project      :   Project Package Inspector
+7. Console      :   Debug Console
+
+25.01.22
+
+
+25.01.23
+
+
+25.01.24
+
