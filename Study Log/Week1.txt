@@ -5,6 +5,7 @@ VS Code
 Unity6
 
 25.01.21
+#1 Lecture
 3D URP project initiating
 System using
 1. Hierarchy    :   Spectating gameObject List in Sceen
@@ -14,6 +15,20 @@ System using
 5. Assets       :   Resource
 6. Project      :   Project Package Inspector
 7. Console      :   Debug Console
+
+#2 Lecture
+preferences - External Tools 
+Namespace tutorial
+
+#3 Lecture
+Ext 라는 영역이라는걸 표현해주는 #region/#endregion
+#region Ext
+Code region
+#endregion
+
+#4 Lecture
+변수란??
+자료형과 한정자
 
 25.01.22
 
