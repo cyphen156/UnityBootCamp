@@ -30,10 +30,45 @@ Code region
 변수란??
 자료형과 한정자
 
-25.01.22
 
+25.01.22
+#1 Lecture
+github Desktop Install
+commit : repository upload accomplishment
+publish
+pull/push
+
+#2 Lecture
+Example Code exercise :: Assets/Scripts/Sample.cs
+How to use scripting System 
+with can customizing public Value in Unity Inspector
+
+#3 Lecture
+Pixel art Game Example
+add Resource :: Texture
+add component collider, rigidbody
+tag && Layer : Object CaseBy Origin ===> Clipping Render
+Layer Matrix
+physics System
+
+#4 Lecture
+rigidbody
+Dynamic : All physics System applied
+Static : No physics System applied but can move scripting
+Linear : Position Resistance Coeffician
+Angular : Rotation Resistance Coeffician
+Collision Detection : Discrete(allow throwable)
+                    : continious(Deny throwable)
+interpolate : fixing update - inter : Previous Frame Base
+                            - Extra : Next Frame Base 
+Layer Override : resolve first with selected Layer 
+Kinematic : 
+
+#5 Lecture
+AddForce(vector(), ForceMode.Force/Impulse) ==> continous or temporary
 
 25.01.23
+
 
 
 25.01.24
