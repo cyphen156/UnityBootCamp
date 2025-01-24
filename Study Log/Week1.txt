@@ -68,8 +68,13 @@ Kinematic :
 AddForce(vector(), ForceMode.Force/Impulse) ==> continous or temporary
 
 25.01.23
-
+#1 Lecture
+컴퓨터 기초
+C#의 기초
 
 
 25.01.24
-
+#1 Lecture
+배열
+반복문
+제어문

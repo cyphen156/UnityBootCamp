@@ -30,7 +30,7 @@ public class Movement : MonoBehaviour
     {
         x = 0f; // 초기값 설정
         y= 0f;
-        speed = 3f;
+        speed = 6f;
         jumpVal = 8f;
         rb = GetComponent<Rigidbody2D>();
         //isWall = false;
