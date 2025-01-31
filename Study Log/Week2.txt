@@ -1,0 +1,116 @@
+25.01.27 ~ 25.01.30
+## Happy Nunar New Year
+thx for giving Holiday
+
+25.01.31 Unity6 Basic
+
+#1 Lecture
+Prefeb : GameObject Asset Making
+_unpack : Instance Localization // 프리펩에 속하지 않는 독립 인스턴스화
+Instance : use able Object
+
+
+#2 Lecture
+Prefeb descendant : Prefeb's prefeb
+Origin  - New Origin Prefeb Localization == 원본 프리펩과 상관이 없는 독립적인 새 프리펩
+Prefeb variant - extends Original Prefeb == 원본 프리펩을 수정하면 여기에도 적용됨
+
+CreateObject.cs
+instantiate() // initiating instance
+Quaternion :: 오일러각 회전 변화량 // 오브젝트의 3차원 방향을 저장 
+-> 상대적 회전값 -180' ~ 180' :: 삼각함수
+
+CreateObject2.cs
+destroy Object Script
+
+
+유니티에 존재하는 특수 폴더 
+Assets : Main Asset Dir
+Editor : 에디터 전용 시스템 스크립트
+Plugins : C/C++ 기반 DLL 
+Resource Dir :: Local file accessable dir :: pre Named Asset Load
+Standard Assets : Android
+Streaming Assets : IOS
+
+#3 Lecture
+
+CreateObject3.cs
+[SerializeField]private GameObject prefeb;
+// [직렬화] :: 유니티 에디터에서 데이터를 인스펙터 창에서 볼 수 있게 잠금공개하는 기능
+// Resources.Load<T>("");
+// GameObject.AddComponent<T ComponentType>();
+
+Unity6 기본 벡터(제공 값)
+Vector3.up(0, 1, 0)/down
+.left(-1, 0, 0)/right
+forward(0, 0, 1)/back
+zero(0, 0, 0)/one
+
+벡터 연산
+vec1 = (1, 2, 3), vec2 = (4, 5, 6)
+스칼라 곱 : 할 수 있음
+벡터의 내적 : 두 벡터의 방향적 유사성을 확인하는 수식 양수는 방향이 비슷함, 0은 수직임, 음수라면 반대 방향임 
+InnerDot = (1*2) + (2*5) + (3*6)
+float dot = Vector3.Dot(k, l); 
+
+벡터 * 벡터 : 벡터의 외적 == 새로운 차원을 향하는 // 두 벡터에 수직인 새로운 벡터를 생성
+Vector3 cross = Vector3.Cross(k, l);
+//k * l = (ky * lz - kz * ly, kz * lx * kx * lz, kx*ky = ky * kx)
+
+//벡터의 크기(벡터의 길이)
+Vector3 m = new Vector3(1, 2, 3);
+float mag = m.magnitude;
+//벡터의 각 성분의 제곱 합의 제곱근
+피타고라스의 정리를 3차원 연산
+
+
+#4 Lecture
+Vector Norm (Normalization) // 정규화 = 스칼라 * 단위벡터 == 스칼라배
+Vector3 a = new Vector3(1, 2, 0);
+// 정규화
+a.Normalize();
+
+// 거리 연산
+Vector3 b = new Vector3(0, 1, 0);
+float dist = Vector3.Distance(a, b);
+
+// 선형 보간 :: 두 끝 점의 값이 제공되었을 때 그 사이에 위치한 값 추정, 직선거리에 따른 선형 연산
+// dist = 0 ~ 1
+transform.position = Vector3.Lerp(startPos, endPos, time);
+
+// 구면 선형보간 :: 호를 그리면서 위치를 찾아가는 것
+transform.position = Vector3.Slerp(startPos, endPos, time);
+
+// 단순 이동
+transform.rotation = Quaternion.Slerp(startRotation, endRotation, time);
+
+
+#5 Lecture
+CoroutineScene.Unity
+UI - Legacy - Text
+
+TextCnt.cs
+IEnumerator CntPlus() // interface Enum Iterator
+{
+    // CPU의 권한을 다른 함수에 위임   --> 비동기함수
+    yield return new WaitForSeconds(1);
+    Debug.Log("밥만 먹고 올게");
+    yield return new WaitForSeconds(5);
+    Debug.Log("밥 다 먹고 왔어");
+
+}
+// Start is called once before the first execution of Update after the MonoBehaviour is created
+void Start()
+{
+    //gobj_text = GameObject.FindGameObjectWithTag("Text001");
+    // 함수가 아닌 문자열을 찾아서 실행시키기에 중지시킬 수 있음
+    // but 성능상의 이슈
+    StartCoroutine("CntPlus");
+    StopCoroutine("CntPlus");
+    // 함수를 실행시키기 때문에 중지시키지 못함
+    StartCoroutine(CntPlus());
+}
+
+텍스트 입력기
+TextInput.cs
+코루틴과 메세지 박스 텍스트 수정하기
