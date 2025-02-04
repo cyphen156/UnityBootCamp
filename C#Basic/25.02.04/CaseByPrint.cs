@@ -1,18 +1,23 @@
-﻿namespace _25._02._04
-{
-    internal class CaseByPrint
-    {
-        static int score = 0;
+﻿using System.Numerics;
 
-        static private void AddScore(int adder)
+namespace _25._02._04
+{
+    class Player
+    {
+        private int score = 0;
+
+        public void AddScore(int adder)
         {
             score += adder;
         }
-        static private int GetScore()
+        public int GetScore()
         {
             return score;
         }
-        static private string LotteryTypeCast (int choose)
+    }
+    internal class CaseByPrint
+    {
+        static private string LotteryTypeCast (int choose, Player player)
         {
             string str = "";
 
@@ -38,7 +43,7 @@
 
             // 뽑힌 카드 숫자 더하기
             choose %= 13;
-            AddScore(choose);
+            player.AddScore(choose);
 
             if (choose == 1)
             {
@@ -63,8 +68,16 @@
             }
             return str;
         }
+
+        static void printWin(string str)
+        {
+            System.Console.WriteLine("Winner :: " + str);
+        }
         static void Main(string[] args)
         {
+            Player player = new Player();
+            Player dealer = new Player();
+
             Random rand = new Random();
 
             int[] deck = new int[52];
@@ -74,17 +87,36 @@
                 deck[i] = i + 1;
             }
 
-            int size = 2;
+            int size = 3;
 
-            // 카드뽑기
+            // 플레이어 카드뽑기
             for (int i = 0; i < size; ++i)
             {
                 int choose = rand.Next(deck.Length);
-                Console.WriteLine(LotteryTypeCast(deck[choose]));
+                Console.WriteLine(LotteryTypeCast(deck[choose], player));
             }
-
+            Console.WriteLine("Player Score : " + player.GetScore());
             Console.WriteLine();
-            Console.WriteLine("Score : " + GetScore());
+
+            // 딜러 카드뽑기
+            for (int i = 0; i < size; ++i)
+            {
+                int choose = rand.Next(deck.Length);
+                Console.WriteLine(LotteryTypeCast(deck[choose], dealer));
+            }
+            Console.WriteLine("Dealer Score : " + dealer.GetScore());
+            Console.WriteLine();
+            
+
+            // 점수 비교
+            if (player.GetScore() >= dealer.GetScore())
+            {
+                printWin("Player");
+            }
+            else
+            {
+                printWin("Dealer");
+            }
         }
     }
 }
