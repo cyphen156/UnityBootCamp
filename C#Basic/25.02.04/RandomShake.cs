@@ -34,7 +34,7 @@
                 array[idx] = array[i];
                 array[i] = temp;
             }
-
+            // 더 줄일 방법은 뭐가 있을까?
             // 출력 코드 
             for (int i = 0; i < 8; ++i)
             {
