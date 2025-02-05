@@ -56,6 +56,48 @@ in은 참조형을 호출자 안에서 건드리면 에러발생
 out은 참조형을 호출자 안에서 수정하지 않으면 에러발생
 
 25.02.05
+Unity6 Basic
+
+#1 Lecture
+Terrain 
+#include Terrain Sample Asset Pack-Unity Techknolodgies
+setting altitude 
+SetHeight
+Texture
+Normal Map = 입체 상의 x y z를 탄젠트 함수로 변환해 rgb좌표로 만든 그림
+-> 평면 상에 높이 값이 있는 것 처럼 빛 반사 처리를 바꿔주는 역할
+
+Diffuse : 물체에 깊이감과 입체감을 부여, 표면에 색을 부여
+
+Normal Scale : 노말 맵에서 설정할 수 있는 스케일
+0 : 조명 계산에 영향 x
+1 : 100%
+2 : 더욱 뚜렷하게
+-1 : 반대로 처리 --> 음영처리?
+
+mask Map : 고해상도 텍스쳐 설정
+메탈릭, 평활도, 타일링 등의 설정 처리
+평활도 :: 텍스쳐의 질감을 표현하기 위한 것
+
+스크립트를 통해 오브젝트에 스크립트를 연결하는 작업
+Ray == 가상의 레이저 선
+시작 지점과 방향을 가지고 있는 벡터
+// 일반적인 Ray 만드는 방법
+Vector3 origin;
+Vector3 vec_dir = Vector.forward
+Ray ray = new Ray(origin, vec_dir);
+// RayCast      광선을 떤지자
+
+#2 Lecture
+Particle System
+Emission - burst : particle to Quick Burst
+probability : 생성 가능성 체크 ...-> 확률?
+size over LifeTime
+
+TMP 전용 폰트 만들기
+MeshPro는 한글이 깨지는 현상 발생
+-> 전용 폰트 설정
+Window - TextMeshPro_Font_Asset_Creator
 
 
 

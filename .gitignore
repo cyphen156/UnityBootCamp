@@ -9,7 +9,6 @@
 [Bb]uilds/
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
-
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 [Mm]emoryCaptures/
@@ -75,4 +74,5 @@ crashlytics-build.properties
 
 # 모든 하위 디렉토리의 Resource 폴더 무시
 **/Resource/
+**/[Dd]ownload[Aa]ssets/
 
