@@ -100,9 +100,28 @@ MeshPro는 한글이 깨지는 현상 발생
 Window - TextMeshPro_Font_Asset_Creator
 
 
-
 25.02.06
+Unity6 Basic 
+People & Job --> 해외 직무 리크루팅 사이트
+데이터 다루기 연습
+데이터의 영구 저장 방법 고려
+PlayerPrefs : 플레이어 환경 설정 저장할 때 사용되는 클래스
+/// 1. DeleteAll()
+/// 2. DeleteKey(KeyName)
+/// 3. Get(Key)
+/// 4. set(Key, Value)// if value is already saved :: change Value
+/// 5. HasKey(Key) :: 키가 존재하는지 여부
 
+// 클래스 기초
+객체 : Unit unit; 선언 되어있는 상태 -> 이런거 있다. 
+인스턴스 : Unit unit = new Unit();  -> 생성자 호출로 인한 생성상태 : 여러개의 인스턴스가 가능
+레퍼런스 : 객체 메모리 주소 접근값
+
+// json 사용시 주의점 
+
+-> C# 스크립트에서는 ReadAllText메서드를 통해 파일을 읽어올 경우 주석문까지 모두 읽어옴 
+--> 추가 예외 처리를 하지 않는다면 클래스 인스턴스로 생성할 수 없다 
+---> 엄격하게 포매팅 해야 사용가능
 
 
 25.02.07
