@@ -125,6 +125,69 @@ PlayerPrefs : 플레이어 환경 설정 저장할 때 사용되는 클래스
 
 
 25.02.07
+Unity6 Basic
+
+#1 Lecture
+Sound & Media / Recorde
+
+Audio Source : AudioClip Playing tool
+
+Audio Listener / Audio Mixer : 실제로 재생시키는 주체
+
+Component Properties
+Bypass  Effects : 오디오 소스에 적용된 필터 효과를 분리
+        Listener Effect : 리스너를 끄거나 켜기
+        Reverb Zones : 리버브 존 을 끄거나 켜기 :: 도플러 효과 연출 // 잔향 효과
+
+Priority : 오디오 우선순위 0 ~ 256 (Min Value first)
+Volume : 리스너 기준 사운드 크기
+pitch : 재생 속도 배율
+spatial Pan : 스테레오 모드 출력 조절기 : 0(default) -1(left Only) 1(Right Only)
+        Blend : 리스너와 스피커의 거리에 따른 소리 재생
+
+Reverb Zone mix : 리버브 존에 대한 출력신호 양을 조절
+                0 : 영향 x
+                1 : default(오디오 소스와 리버브 존 사이의 신호를 최대치)
+                1.1 : 10db 증폭 
+                동굴 속 소리 반사, 을림효과 등 설정
+
+3D Sound Settings
+    Doppler Level : 거리에 따른 사운드 높낮이 표현
+    Spread : 사운드가 퍼지는 각도 (0 ~ 360)
+
+    Rolloff Mode : 그래프 설정
 
 
+#2 Lecture
+README.md 일반적인 작성 방법
+Heading Tag (H1 = #)
+# H1
 
+``` (css)
+(Lnaguage :: Source Code) inspecter
+```
+
+**내용** (강조)
+
+취소선 사용가능
+
+issue -> img resource URI insert
+
++/-/* (List)
+
+*1
+    *2
+        *3
+
+|제목|내용|설명| (표)
+|:   |  :|:  :| (왼, 우, 중앙 정렬)
+
+#3 Lecture
+Scene name : AfterLunch.Unity
+Audio + UI + Mixer
+음파장 시각화 
+
+Scene name : SampleScene3
+오디오 믹서 만들기
+create -> Audio -> AudioMixer
+inspecter -> Attenuation -> Expose (스크립트를 통한 통제)

@@ -27,17 +27,17 @@ public class ItemDataSystem : MonoBehaviour
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI descriptionText;
 
-    // ¾ÆÀÌÅÛ °­È­¿ë º¯¼ö
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private string defaultText;
     public Text itemGradeText;
     public Text enhanceText;
     public Button EnhanceBtn;
 
-    // ÀÌ¹ÌÁö ±³Ã¼¿ë º¯¼ö
+    // ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public RawImage rawImage;
     public string defaultPath = "sword";
 
-    // JSON´Ù·ç±â
+    // JSONï¿½Ù·ï¿½ï¿½
     private string enhanceDataPath;
     private EnhanceData enhanceData;
 
@@ -45,11 +45,11 @@ public class ItemDataSystem : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // ÀÌ°É·Î µî·ÏÇÏ¸é ÀÎ½ºÆåÅÍ Ã¢¿¡¼­ ¾Èº¸ÀÌ´Ï±î ÁÖÀÇÇÏ¼Ä
+        // ï¿½Ì°É·ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Î½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¢ï¿½ï¿½ï¿½ï¿½ ï¿½Èºï¿½ï¿½Ì´Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¼ï¿½
         nameInputField.onEndEdit.AddListener(ValueChanged);
         descriptionInputField.onEndEdit.AddListener(ValueChanged);
 
-        // ÀúÀå°ü·Ã ¹öÆ° »óÈ£ÀÛ¿ë È°¼º/ºñÈ°¼º ÃÊ±âÈ­ÇÏ±â
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° ï¿½ï¿½È£ï¿½Û¿ï¿½ È°ï¿½ï¿½/ï¿½ï¿½È°ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ï±ï¿½
         saveBtn.onClick.AddListener(SaveData);
         saveBtn.interactable = true;
         loadBtn.onClick.AddListener(LoadData);
@@ -59,7 +59,7 @@ public class ItemDataSystem : MonoBehaviour
         ItemData itemData = new ItemData();
 
 
-        // ¿©±â´Â °­È­ ±â´É ÃÊ±âÈ­ÇÏ±â
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­ ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ï±ï¿½
         enhanceDataPath = Path.Combine(Application.persistentDataPath, "enhanceData.json");
         enhanceData = new EnhanceData();
         
@@ -73,12 +73,12 @@ public class ItemDataSystem : MonoBehaviour
         SetDataInfo(itemData);
     }
 
-    // 1.publilc ÇÔ¼ö´Â À¯´ÏÆ¼ ÀÎ½ºÆåÅÍ¿¡¼­ Á÷Á¢ ¿¬°á
-    // 2.publicÀÌ ¾Æ´Ñ ÇÔ¼ö´Â ½ºÅ©¸³Æ®¸¦ ÅëÇØ Á÷Á¢ ¿¬°á  
+    // 1.publilc ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ¼ ï¿½Î½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    // 2.publicï¿½ï¿½ ï¿½Æ´ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½  
 
     public void Sample()
     {
-        Debug.Log("ÀÔ·Â¹ß»ý");
+        Debug.Log("ï¿½Ô·Â¹ß»ï¿½");
     }
     // Update is called once per frame
     void Update()
@@ -87,7 +87,7 @@ public class ItemDataSystem : MonoBehaviour
 
     void SetDataInfo(ItemData itemData)
     {
-        enhanceText.text = $"°­È­ È®·ü : {enhanceData.EnhanceSuccessRate}%";
+        enhanceText.text = $"ï¿½ï¿½È­ È®ï¿½ï¿½ : {enhanceData.EnhanceSuccessRate}%";
         itemGradeText.text = $"{defaultText}{enhanceData.itemGrade}";
         nameText.text = $"{defaultText}{enhanceData.itemGrade} {itemData.itemName}";
         descriptionText.text = itemData.itemDescription;
@@ -95,31 +95,31 @@ public class ItemDataSystem : MonoBehaviour
 
     void ValueChanged(string text)
     {
-        Debug.Log("¸Þ¼¼Áö Àü¼ÛÇÏ±â : " + text);
+        Debug.Log("ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ : " + text);
     }
 
     void Enhance()
     {
-        //È®·ü °è»ê ¿¬»êÇÏ±â
+        //È®ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
         int value = Random.Range(0, 100);
         if (enhanceData.EnhanceSuccessRate - value >= 0)
         {
-            // °­È­ ¼º°ø½Ã
-            //// °­È­ ¼º°øÇÏ°í ÀúÀå ¾ÈÇÏ¸é ´Ï Å¿ÀÌ´Ù. ÈÄÈ¸ÇÏÁö¸¶¶ó
-            Debug.Log("°­È­ ¼º°ø");
+            // ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            //// ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ Å¿ï¿½Ì´ï¿½. ï¿½ï¿½È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            Debug.Log("ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½");
             enhanceData.EnhanceSuccessRate -= 2 * (enhanceData.EnhanceSuccessRate / 10);
             enhanceData.itemGrade++;
         }
         else
         {
-            // °­È­ ½ÇÆÐ½Ã
-            //// ½ÇÆÐÇÏ¸é ¹«±â ÅÍÁö´Â°Å¾ß ±×·¯´Ï±î Áö¿î´Ù?
-            Debug.Log($"°­È­ ½ÇÆÐ");
+            // ï¿½ï¿½È­ ï¿½ï¿½ï¿½Ð½ï¿½
+            //// ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Â°Å¾ï¿½ ï¿½×·ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½?
+            Debug.Log($"ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½");
             enhanceData.EnhanceSuccessRate = 100;
             enhanceData.itemGrade = 0;
             DeleteData();
         }
-        // È­¸é °»½ÅÇÏ±â
+        // È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
         ChangeSwordImage();
         SetDataInfo(itemData);
     }
@@ -146,7 +146,7 @@ public class ItemDataSystem : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"ÀÌ¹ÌÁö ·Îµå ½ÇÆÐ: {imgPath}");
+            Debug.LogError($"ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½: {imgPath}");
         }
     }
     public void SaveData()
@@ -174,11 +174,11 @@ public class ItemDataSystem : MonoBehaviour
         {
             string json = File.ReadAllText(enhanceDataPath);
             enhanceData = JsonUtility.FromJson<EnhanceData>(json);
-            Debug.Log("°­È­ Á¤º¸ ºÒ·¯¿À±â ¿Ï·á: " + json);
+            Debug.Log("ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½: " + json);
         }
         else
         {
-            Debug.Log("°­È­ µ¥ÀÌÅÍ ¾øÀ½, ±âº»°ª Àû¿ë");
+            Debug.Log("ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½âº»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             enhanceData.itemGrade = 0;
             enhanceData.EnhanceSuccessRate = 100;
         }
@@ -187,8 +187,8 @@ public class ItemDataSystem : MonoBehaviour
         {
             EnhanceBtn.interactable = false;
             deleteBtn.interactable = false;
-            itemData.itemName = "°¡Áö°í ÀÖ´Â ¾ÆÀÌÅÛÀÌ ¾ø¾î¿ä";
-            itemData.itemDescription = "¾ÆÀÌÅÛ Á¤º¸¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä";
+            itemData.itemName = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½";
+            itemData.itemDescription = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½";
         }
         else
         {
