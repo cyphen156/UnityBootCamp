@@ -1,0 +1,91 @@
+25.02.10
+C# Basic
+
+/* HighLight :: 강사님의 조언
+엔진 사용법을 배울 때 
+플레이에 초점맞추지 말고 스크립트 로직에 대해 생각해라.
+{
+    Ex) 폭발음
+    - 오브젝트에 컴포넌트를 배치했다면 
+    인스턴스 삭제시 컴포넌트도 같이 삭제되어
+    오디오가 재생되지 않음.
+    
+    ->  인스턴스 삭제 지연 처리 고려
+    ->  인스턴스 위치를 가져와서
+        빈 오브젝트 하위 컴포넌트로 오디오 등록하여 재생 후 삭제 
+    
+    --> 플레이어 인스턴스에 오디오를 등록
+    --> 재생 위치벡터 보정 후 재생
+
+    ====> 방법은 다양
+    ====> 상황에 맞는 방법을 고려하고 구현 해보는 것이 중요하다.
+} 
+*/
+
+#1 Lecture
+C#도 GC가 존재하기 때문에 가상머신 안에서 돌아가는 언어다.
+Serialize / DeSerialize
+형식
+File <- QueryLanguage -> Memory
+블랙잭 - 프로그램의 생명 주기를 설명할 수 있는 대표적인 예시 프로그램
+
+C :: RTTI : Run-Time Type Information :: C# Reflection
+
+#2 Lecture
+메모리 복습하기 
+Code Area : 프로그램 실행 중에 변하지 않을 영역
+Data Area : 런타임 중 실행 코드가 변할 수 있는 영역
+Heap Area : 동적할당영역
+Stack Area : 호출 영역
+
+C#에서는 스택 영역에 값 형식 변수들이 생긴다
+-> (int, float, bool, string, char, struct, stack)
+
+Boxing - unBoxing 
+(
+    int c; 
+    object d;
+    d = c;
+)
+
+힙 영역 : 참조형(ref)
+-> (class instance)
+자료형 박싱에 대한 고찰글
+https://cyphen156.tistory.com/217
+
+#3 Lecture
+Unity에서 Start()함수의 의미 == > 스크립트 로드 후 첫 프레임 렌더링 시 발동
+==> Awake () Init
+==> Enable () 렌더링 여부가 결정될 때
+==> Start () 실제 렌더링 될 때
+==> FixedUpdate () 프레임 속도와 무관하게 일정 주기마다 실행(물리연산)
+==> Update () 프레임 마다 실행
+==> LateUpdate() 카메라 움직임, 애니메이션 후처리 오브젝트 종속 업데이트
+=====> 주로 보정 처리 관련해서 사용
+
+카메라 옵션(투영)    : Perspective == 원근감
+                    : orthographic == 원근감 없는 2D
+
+{// 객체지향 프로그래밍의 핵심
+    데이터 모델링
+    FSM = 몬스터 행동을 제어하는 상태 머신
+}
+
+25.02.11
+C# Basic
+#1 Lecture
+
+
+25.02.12
+Unity6 Basic
+#1 Lecture
+
+
+25.02.13
+Unity6 Basic
+#1 Lecture
+
+
+25.02.14
+Unity6 Basic
+#1 Lecture
