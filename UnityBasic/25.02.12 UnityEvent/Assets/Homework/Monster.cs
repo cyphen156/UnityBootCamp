@@ -5,6 +5,7 @@ public class Monster : AbsGameObject
     private void Start()
     {
         // 몬스터는 기본적으로 코인을 가지고 있음
+        hp = 10;
         coin = Random.Range(0, 10);
     }
 
@@ -16,6 +17,6 @@ public class Monster : AbsGameObject
     {
         base.DropItem();
 
-        Instantiate(gameObject);
+        Instantiate(gameObject, base.GenerateNewPosition(0) ,Quaternion.identity);
     }
 }

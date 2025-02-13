@@ -2,11 +2,10 @@
 public abstract class AbsGameObject : MonoBehaviour, ICollideObject
 {
     public GameObject dropCoinObj;
-
     public int hp = 10;
     public int coin = 0;
 
-    public void OnCollisionEnter(Collision collision)
+    public virtual void OnCollisionEnter(Collision collision)
     {
         // 코인 처리 로직
         if (collision.gameObject.tag == "Coin")
@@ -39,10 +38,9 @@ public abstract class AbsGameObject : MonoBehaviour, ICollideObject
     protected virtual void DropItem()
     // 하드코어 임다 죽으면 템 다 떨구게 만들거임
     {
-        Vector3 newPosition = transform.position + new Vector3(Random.Range(-5, 6), 3, Random.Range(-5, 6));
         if (dropCoinObj != null)
         {
-            GameObject droppedItem = Instantiate(dropCoinObj, newPosition, Quaternion.identity);
+            GameObject droppedItem = Instantiate(dropCoinObj, GenerateNewPosition(5), Quaternion.identity);
             Coin coinComponent = droppedItem.GetComponent<Coin>();
 
             if (coinComponent != null)
@@ -51,4 +49,10 @@ public abstract class AbsGameObject : MonoBehaviour, ICollideObject
             }
         }
     }
+
+    public Vector3 GenerateNewPosition(int interval)
+    {
+        Vector3 newPosition = transform.position + new Vector3(Random.Range(-5, 6), interval, Random.Range(-5, 6));
+        return newPosition;
+    }    
 }

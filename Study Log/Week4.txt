@@ -198,6 +198,53 @@ Event Handler
 25.02.13
 Unity6 Basic
 #1 Lecture
+스크립터블 오브젝트
+[CreateAssetMenu]
+"ClassName":ScriptableObject
+EmptyObject<ItemSampleSample><<newItemSample>>
+SO/newItemSample
+
+유니티에서 제공해주는 데이터 저장 객체
+-> 게임 데이터를 관리하고 인스턴스끼리 공유할 수 있도록 도와줌
+
+장점
+동일한 오브젝트의 정보를 여러 오브젝트가 공유할 수 있도록 하고 메모리는 한번만 차지
+데이터와 로직을 분리 사용
+런타임 중 데이터 수정
+
+단점
+데이터 충돌 / 교착상태의 위험성
+데이터 손실 위험성
+
+데이터 베이스 없이 관리할 때 사용하기 좋음
+행동패턴, 능력치 등에 대한 설정
+게임의 설정 값 등에 사용하기 좋음
+
+#2 Lecture
+Data Structure
+List
+Dictionary
+Queue
+Stack
+hashSet : 정렬 필요 없음, 데이터의 중복 없음
+
+// 큐 : 중간에 있는 데이터를 접근하는게 비효율적이다.
+Enqueue(data); -> 삽입
+Dequeue() -> 삭제 // 맨 앞엣놈 하나 삭제
+Peek() 맨 앞엣놈 제거안하고 가져오기
+큐는 로컬 변수를 통해 제어하기 보다는 파일 리드를 통해 대화 묶음을 가지고 있는 편이 낫다
+
+타이핑 텍스트
+-> 화면 상에서 텍스트를 타이핑 하듯이 출력
+...> 문자열 분할 출력
+텍스트 UI에 만드세요
+
+Push()
+Pop()
+
+#3Lecture
+Quest System
+
 
 
 25.02.14

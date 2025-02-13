@@ -3,7 +3,7 @@ using UnityEngine;
 public class Coin : MonoBehaviour
 {
     public int coin;
-    private float rotateSpeed = 60f;
+    private float rotateSpeed = 100f;
 
     private void Update()
     {
