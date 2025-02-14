@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.0.31f1
+CRC: 2748631964
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: f780dbc9d8f87a7715a5229bd1ccfa13
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4afb0d898c1c22a5e88248733bd69457
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: a665597825bb9c7ba0656101836f47b6
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Scripts/AssetBundleScene/materials/red.mat
+Dependencies: []

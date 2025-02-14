@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: asset3
+  m_EditorClassIdentifier: 
+  m_GroupName: asset3
+  m_GUID: 3e9e5cc4440d78f49a2a7f9d1b4c6a06
+  m_SerializeEntries:
+  - m_GUID: 38da1f750dc9bc84abcd20880fd7f380
+    m_Address: Assets/Scripts/AssetBundleScene/materials/green.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: c940df72aa396444ab37290c90b85563, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 6bedab53010f9a149b10a39f7f577f2a, type: 2}
+    - {fileID: 11400000, guid: b428226640b51d646aa7344f0eb6b948, type: 2}

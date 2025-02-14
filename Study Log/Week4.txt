@@ -244,9 +244,87 @@ Pop()
 
 #3Lecture
 Quest System
-
+실습과제
 
 
 25.02.14
 Unity6 Basic
 #1 Lecture
+유니티 에셋 시스템
+리소스 로드는 할 줄 아니까
+어드레서블 빌드에 초점을 맞춰 공부한다. 
+씬 전환 방법에 대해서도 심화 학습한다.
+3D 소품
+https://assetstore.unity.com/packages/3d/props/interior/bedroom-interior-low-poly-assets-295074
+씬 관리 방법
+
+
+씬과 스크립터블을 사용하면 장점 - > 씬간 데이터를 공유해서 사용할 수 있다
+-> 적극적으로 인스턴스를 사용하고, 영구저장 로직을 생각해서 따로 관리한다.
+
+if (Input.GetKeyDown(KeyCode.U))
+{
+    // default :: LoadSceneMode.Single
+    // 씬이 대체된다 :: 데이터 날아간다
+    SceneManager.LoadScene("BRP Sample Scene");
+}
+if (Input.GetKeyDown(KeyCode.U))
+{
+    // 씬이 하나 더 로드된다 :: 덮어씌운다 :::: 화면 플리커링 될수도 있으니 주의한다.
+    SceneManager.LoadScene("BRP Sample Scene", LoadSceneMode.Additive);
+}
+AdditiveMode는 주로 인게임 동영상 재생에 사용해먹으면 좋을 것 같다. 
+로스트아크의 게임 진행 중 씨네마틱 영상의 경우 게임플레이 - 영상재생 - 게임플레이로
+유저의 경험이 연결되는 경향이 크다. ->>>>>> 이러면 두 씬을 모두 유지하고 있다는 소리다.
+
+비동기로 미리 로드해놓고 비활성화 해놓은 뒤, 특정 상황이 오면 바로 활성화 하고 
+씬이 끝나면 다시 복귀하는 로직 구성을 한다.
+
+Audio Listener, Camera 조심
+
+#2 Lecture
+동기/비동기
+
+동기 : 작업을 순차 실행하는 방식, 무결성을 유지하기 위해 다중 작업을 하지 않는 것
+
+
+비동기 : 멀티 작업방식
+무결성을 깨트릴 수 있으나 다중 처리를 통해 다수의 사용자가 사용할 때 효과적
+
+// async 키워드는 비동기 함수 선언시 사용하는 키워드
+// 리턴 타입은 항상 void , Task, Tast<T>를 리턴
+
+// await는 비동기 함수 내부에서 사용되는 키워드
+// 리턴 함수나 표현식 앞에 사용
+
+#3 Lecture 싱글턴과 게임 매니저
+싱글턴은 인스턴스가 너무 많은 데이터를 공유하면 수정이 어렵고 테스트도 까다로워 진다.
+TSingleton<T> : Mono where T : Mono
+
+Generic :: 일반화 프로그래밍
+
+#4 Lecture :: AssetBundleScene
+애셋들을 묶어놓은 아카이브
+application에 다운로드 하기 위한 기능
+런타임 애셋 로딩 가능
+
+기능을 구현할 시스템 :: DLC, ContentPack, 초기 InstallSize
+
+애셋 번들 빌드 방법 : Editor폴더를 생성해 스크립트 작성
+
+#5 Lecture :: 애셋 로드
+LoadAssetBundleManager.class
+구글 드라이브 로드
+
+#6 Lecture
+어드레서블
+
+Remote = 서버
+Local
+
+Default Local Group :: Build & Load를 Remote로 변경
+-> Cache Clear를 New Version Loaded로 변경
+-> 업데이트 시 에만 캐시 클리어
+
+space in needed in cache :: 계속 들고 있다가 공간이 부족한 경우에만 번들 삭제 후 새로 다운로드
+// AssetReference는 특정 타입을 지정하지 않고 리소스를 참조

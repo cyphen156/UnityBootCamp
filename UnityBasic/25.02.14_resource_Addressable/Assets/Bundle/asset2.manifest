@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.0.31f1
+CRC: 1855827938
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 39d038abd28fa7afeed15cc8cf2e9d98
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4afb0d898c1c22a5e88248733bd69457
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 8b1e8a414169bd828bc1d7b23e0f7da6
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Scripts/AssetBundleScene/materials/blue.mat
+Dependencies: []
