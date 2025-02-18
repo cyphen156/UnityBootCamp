@@ -1,4 +1,5 @@
 ﻿using _25._02._18_2D_Engine.Core;
+using _25._02._18_2D_Engine.Data;
 
 namespace _25._02._18_2D_Engine
 {
@@ -6,14 +7,32 @@ namespace _25._02._18_2D_Engine
     {
         static void Main(string[] args)
         {
-            Engine engine = Engine.GetInstance();
+            List list = new List();
 
-            engine.Init();
-
-            while (engine.isRunning)
+            for (int i = 0; i < 23; ++i)
             {
-                engine.Run();
+                list.Add(i);
+
             }
+
+            for (int i = 0; i < 10; ++i)
+            {
+                list.Delete();
+            }
+            list.Count();
+            list.Print();
+
+            list.Insert(9, 5);
+            list.RemoveAt(7);
+            list.Clear();
+            //Engine engine = Engine.GetInstance();
+
+            //engine.Init();
+
+            //while (engine.isRunning)
+            //{
+            //    engine.Run();
+            //}
         }
     }
 }
