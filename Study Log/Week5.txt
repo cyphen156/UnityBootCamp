@@ -40,11 +40,60 @@ C# Basic
 #1 Lecture
 2D Engine Basic Continue;
 
-
+#2 Lecture
+List / Dynamic Array
 
 25.02.19
 Unity6 Basic
+3D_Idle_Game Project
+
+using Unity Assets
+3D characters
+1. Mimic Prototype  :   https://assetstore.unity.com/packages/3d/characters/creatures/mimic-prototype-245997
+2. Kawaii Slimes    :   https://assetstore.unity.com/packages/3d/characters/creatures/kawaii-slimes-221172
+3. RPG Monster Dui PBR Polyart  :   https://assetstore.unity.com/packages/3d/characters/creatures/rpg-monster-duo-pbr-polyart-157762
+
+Terrain
+1. Terrain Sample Asset Pack    :   https://assetstore.unity.com/packages/3d/environments/landscapes/terrain-sample-asset-pack-145808
+
+Particle
+1. Magic Effects FREE   :   https://assetstore.unity.com/packages/vfx/particles/spells/magic-effects-free-247933
+2. Particle Pack        :   https://assetstore.unity.com/packages/vfx/particles/particle-pack-127325
+
 #1 Lecture
+세븐나이츠 키우기 LIKE Game
+애셋 다운로드,  맵 기본 설정
+
+#2 Lecture
+애니메이션 관련 설정
+Animation/SlimeController
+
+#3 Lecture
+몬스터 이동 -> 플레이어 위치로
+몬스터 스포너 
+
+#4 Lecture
+오브젝트 풀링을 통한 생성 방식 개선
+-> 미리 생성해 놓고 비활성화 하여 아직 생성안된것 처럼 속이는 작업
+
+#5 Lecture
+통합 매니저 설계
+앞으로 만들 모든 매니저에 대한 연결점
+프로퍼티로 접근
+
+풀 매니저 설계 
+string, IPOOL을 키 / 값으로 갖는 딕셔너리 등록
+풀에 대한 틀을 제공하는 용도
+트랜스폼( 풀연결 위치)
+큐
+몬스터 하나를 얻어오는 기능
+반납하려는 기능
+
+2. 오브젝트 풀 클래스 설계 : IPool
+인터페이스 기반으로 기능 설계 완료
+풀 매니저 멤버 설계
+:: string IPool을 k, v로 갖는 딕셔너리 등록, 경로를 전달받아 키를 추가하려는 함수 작성
+
 
 
 25.02.20

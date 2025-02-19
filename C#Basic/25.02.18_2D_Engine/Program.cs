@@ -25,14 +25,14 @@ namespace _25._02._18_2D_Engine
             list.Insert(9, 5);
             list.RemoveAt(7);
             list.Clear();
-            //Engine engine = Engine.GetInstance();
+            Engine engine = Engine.GetInstance();
 
-            //engine.Init();
+            engine.Init();
 
-            //while (engine.isRunning)
-            //{
-            //    engine.Run();
-            //}
+            while (engine.isRunning)
+            {
+                engine.Run();
+            }
         }
     }
 }
