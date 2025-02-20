@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(Rigidbody2D))] 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
@@ -26,31 +27,44 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D rb;
 
+    public int HP;
     float axisH;
-    public float speed;
-    public float jumpForce;
+    public const float speed = 5.0f;
+    public const float jumpForce = 5.0f;
+    public float accelateForce;
     public LayerMask layerMask;
     bool isJump;
     bool isGround;
+    bool isAccelerate;
 
-
+    public Text HPText;
+    public Text LevelText;
     public static string state = "Playing";
     private void Start()
     {
+        HP = 5;
         rb = GetComponent<Rigidbody2D>();
         axisH = 0.0f;
-        speed = 3.0f;
-        jumpForce = 5.0f;
+        accelateForce = 1.5f;
         isJump = false;
         isGround = true;
         state = "Playing";
         animator = GetComponent<Animator>();
         currentAnim = Enum.GetName(typeof(ANIME_STATE), 0);
         previousAnim = currentAnim;
+        isAccelerate = false;
     }
 
     private void Update()
     {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            isAccelerate = true;
+        }
+        else
+        {
+            isAccelerate = false;
+        }
         if (state != "Playing")
         {
             return;
@@ -70,6 +84,9 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
         }
+
+        HPText.text = "HP : " + HP.ToString();
+        LevelText.text = "Stage Level : " + LevelManager.level.ToString();
     }
 
     private void FixedUpdate()
@@ -82,7 +99,7 @@ public class PlayerController : MonoBehaviour
         // 지정한 두 점을 연결하는 가상의 선에 게임 오브젝트가 접촉하는지?
         if (isGround || (axisH != 0))
         {
-            rb.linearVelocity = new Vector2(speed * axisH, rb.linearVelocityY);
+            rb.linearVelocity = new Vector2(Speed() * axisH, rb.linearVelocityY);
         }
 
         if (isGround && isJump)
@@ -129,32 +146,43 @@ public class PlayerController : MonoBehaviour
 
         }
     }
-
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            Damaged();
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        
         if (collision.gameObject.tag == "Goal")
         {
             Goal();
         }
-        if (collision.gameObject.tag == "Dead")
+        else if (collision.gameObject.tag == "Dead")
         {
             GameOver();
         }
     }
 
-    //private void ChangeAnim(string AnimName)
-    //{
-    //    animator.Play(Enum.GetName(typeof(ANIME_STATE), AnimName));
-    //}
+    private void Damaged()
+    {
+        Debug.Log("");
+        HP--;
+        if (HP <= 0)
+        {
+            GameOver();
+        }
+    }
 
     private void Goal()
     {
         animator.Play(Enum.GetName(typeof(ANIME_STATE), 3));
         state = "GameClear";
-        Debug.Log("1");
         GameStop();
     }
-    private void GameOver()
+    public void GameOver()
     {
         animator.Play(Enum.GetName(typeof(ANIME_STATE), 4));
         state = "GameOver";
@@ -162,8 +190,17 @@ public class PlayerController : MonoBehaviour
         GetComponent<CapsuleCollider2D>().enabled = false;
         rb.AddForce(new Vector2(0, 5), ForceMode2D.Impulse);
     }
-    private void GameStop()
+    public void GameStop()
     {
         rb.linearVelocity = new Vector2(0, 0);
+    }
+
+    public float Speed()
+    {
+        if (isAccelerate)
+        {
+            return speed * accelateForce;
+        }
+        return speed;
     }
 }
