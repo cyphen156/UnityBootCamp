@@ -95,10 +95,21 @@ string, IPOOL을 키 / 값으로 갖는 딕셔너리 등록
 :: string IPool을 k, v로 갖는 딕셔너리 등록, 경로를 전달받아 키를 추가하려는 함수 작성
 
 
-
 25.02.20
 Unity6 Basic
+2D PlatFormmer Game
+
 #1 Lecture
+Stage1.scene
+1. 맵 배치
+
+2. 레이어와 태그 설정
+Tag     ::  Gaol, Player, Dead
+Layer   ::  Ground
+
+3. 콜라이더 추가
+
+2D - physics Material
 
 
 25.02.21
