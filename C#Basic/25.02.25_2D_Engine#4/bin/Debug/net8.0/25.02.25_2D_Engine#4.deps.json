@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "25.02.25_2D_Engine#4/1.0.0": {
+        "runtime": {
+          "25.02.25_2D_Engine#4.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "25.02.25_2D_Engine#4/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
