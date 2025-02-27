@@ -30,14 +30,23 @@ public class PlayerMove : MonoBehaviour
         y = transform.position.y;
         z = transform.position.z;
         startRotate = transform.rotation;
+        //StartCoroutine(startSequence());
 
-        StartCoroutine(startSequence());
+        //*****
+        // 테스트용 범위 코드
+        inputLock = false;
+        transform.position = new Vector3(0, 0, 0);
+        transform.rotation = quaternion.Euler(0, 0, 0);
+        Camera.main.transform.position = new Vector3(0, 0, -5);
+        Camera.main.transform.rotation = quaternion.Euler(0, 0, 0);
+        //******
     }
     
     IEnumerator startSequence()
     {
         yield return new WaitForSeconds(0.2f);
-
+        PlayerFire pf = gameObject.GetComponent<PlayerFire>();
+        pf.enabled = false;
         while (transform.position.y < 0)
         {
             if (transform.position.y < -5 || transform.position.z < 0 || transform.rotation.x > 0)
@@ -68,6 +77,7 @@ public class PlayerMove : MonoBehaviour
         playerText.text = ("살아남으세요!");
         EnemyManager.SetActive(true);
         playerText.text = ("");
+        pf.enabled = true;
     }
 
     private void Update()
@@ -82,10 +92,6 @@ public class PlayerMove : MonoBehaviour
             transform.rotation = quaternion.Euler(0, -h, 0);
             
             transform.position += dir * speed * Time.deltaTime;
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                gameObject.GetComponent<Fire>().FireBullet();
-            }
 
             // 맵 영역을 나가지 못하도록 하는 시퀀스
             x = 0;

@@ -23,7 +23,7 @@ public class CameraController : MonoBehaviour
         maxDistY = 3.0f;
         player = GameObject.FindGameObjectWithTag("Player");
         StartCoroutine(GetCameraSpeed());
-        StartCoroutine(startSequence());
+        //StartCoroutine(startSequence());
 
     }
     IEnumerator GetCameraSpeed()

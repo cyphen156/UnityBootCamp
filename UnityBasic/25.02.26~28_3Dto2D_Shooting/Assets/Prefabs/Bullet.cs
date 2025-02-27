@@ -4,7 +4,6 @@ public class Bullet : MonoBehaviour
 {
     public float speed;
 
-
      void Start()
     {
         speed = 4f;    
