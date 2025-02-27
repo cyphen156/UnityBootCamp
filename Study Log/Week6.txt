@@ -309,12 +309,32 @@ SetCursorPosition()은 해당 메모리에 가서 덮어씌우라는 소리가 �
 25.02.26
 Unity6 Basic
 #1 Lecture
+3Dto2DShooting Game
+기본 설정
+**********************************
+* 카메라                          *
+* - projection - orthographic    *
+* - env - solid color            *
+*                                *
+* Window - Render - Lighting     *
+* - Env lighting = color         *
+* - ambient Color 255, 255, 255  *
+**********************************
 
+PlayerMove.cs   // 플레이어 이동 처리
+
+Cube    ==  Player
+물체의 이동 공식
+등속운동과 등 가속도
+P = P0 + vt(속도 * 시간)
+V = v0 + at
+힘 = 질량 * 가속
+F = ma
 
 25.02.27
 Unity6 Basic
 #1 Lecture
-
+불릿 프리펩에 오디오 추가하기
 
 25.02.28
 Unity6 Basic
