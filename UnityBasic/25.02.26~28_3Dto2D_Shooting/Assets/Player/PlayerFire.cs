@@ -31,8 +31,14 @@ public class PlayerFire : MonoBehaviour
 
     public void FireBullet()
     {
-        GameObject bullet = Instantiate(bulletFactory);
-        bullet.transform.position = firePosition.transform.position;
+        GameObject bullet = Instantiate(bulletFactory, firePosition.transform.position, Quaternion.identity);
+        Bullet bulletScript = bullet.GetComponent<Bullet>();
+
+        if (bulletScript != null)
+        {
+            bulletScript.SetDirection(new Vector3(0, 1, 0));
+            bulletScript.SetSpeed(7.0f);
+        }
     }
 
     public void FireBomb()
@@ -53,7 +59,10 @@ public class PlayerFire : MonoBehaviour
 
     public void AddBombCount()
     {
-        bombCount++;
-        bombCountText.text = $"³²Àº ÆøÅº °¹¼ö : {bombCount}°³";
+        if (bombCount < maxBombCount)
+        {
+            bombCount++;
+            bombCountText.text = $"³²Àº ÆøÅº °¹¼ö : {bombCount}°³";
+        }
     }
 }

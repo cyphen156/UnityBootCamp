@@ -125,6 +125,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0
+  direction: {x: 0, y: 0, z: 0}
+  ownerLayer: 0
+  ExplosionEffect: {fileID: 3558522596075075887, guid: 0a3c496a54f51594898c4232208c426c, type: 3}
 --- !u!1001 &4796872616151131741
 PrefabInstance:
   m_ObjectHideFlags: 0

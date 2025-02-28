@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 700148273366829061}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.6, z: 0}
+  m_LocalPosition: {x: 0, y: 2.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -45,8 +45,8 @@ GameObject:
   - component: {fileID: 6822187157963441843}
   - component: {fileID: 6919414832201236543}
   - component: {fileID: 5351456792673732621}
-  - component: {fileID: 5467121603823425515}
   - component: {fileID: 6506587940597026760}
+  - component: {fileID: 4957617371611649711}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Enemy
@@ -136,9 +136,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e64586fd1190464ab2cac47352316ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTime: 0
-  deadTime: 0
-  ExplosionEffect: {fileID: 3558522596075075887, guid: 0a3c496a54f51594898c4232208c426c, type: 3}
+  fireDuration: 0
+  target: {fileID: 0}
+  targetPosition: {x: 0, y: 0, z: 0}
+  direction: {x: 0, y: 0, z: 0}
+  targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  rotateZ: 0
+  levelCorrection: 0
+  fireCount: 0
+  maxDist: 0
+  maxCorrection: 0
+  isFire: 0
+  bulletFactory: {fileID: 2671845954164275945, guid: 9f21375b67409a14fb44b4e3461f0b60, type: 3}
+  firePosition: {fileID: 700148273366829061}
 --- !u!65 &6919414832201236543
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -181,7 +191,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 9.393361, y: 2, z: 1.0000002}
   m_Center: {x: 0, y: -0.4, z: 0}
---- !u!54 &5467121603823425515
+--- !u!114 &6506587940597026760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2936866706662786629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca75a3dad3529c2498831b9ad159ba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+--- !u!54 &4957617371611649711
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -189,7 +212,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2936866706662786629}
   serializedVersion: 4
-  m_Mass: 0.2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -208,26 +231,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6506587940597026760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2936866706662786629}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca75a3dad3529c2498831b9ad159ba37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireDuration: 0
-  target: {fileID: 0}
-  targetPosition: {x: 0, y: 0, z: 0}
-  currentTime: 0
-  speed: 0
-  levelCorrection: 0
-  maxCorrection: 0
-  isFire: 0
 --- !u!1001 &3316758027765144908
 PrefabInstance:
   m_ObjectHideFlags: 0

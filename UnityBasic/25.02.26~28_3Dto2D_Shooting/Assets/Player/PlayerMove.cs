@@ -18,9 +18,13 @@ public class PlayerMove : MonoBehaviour
     quaternion startRotate;
     public bool isEndOfMap;
     public TextMeshProUGUI playerText;
+    public TextMeshProUGUI timeText;
+    public float livingTime;
     public GameObject EnemyManager;
+
     private void Start()
     {
+        livingTime = 0;
         maxX = 15;
         maxY = 15;
         inputLock = true;
@@ -30,15 +34,15 @@ public class PlayerMove : MonoBehaviour
         y = transform.position.y;
         z = transform.position.z;
         startRotate = transform.rotation;
-        //StartCoroutine(startSequence());
+        StartCoroutine(startSequence());
 
         //*****
         // 테스트용 범위 코드
-        inputLock = false;
-        transform.position = new Vector3(0, 0, 0);
-        transform.rotation = quaternion.Euler(0, 0, 0);
-        Camera.main.transform.position = new Vector3(0, 0, -5);
-        Camera.main.transform.rotation = quaternion.Euler(0, 0, 0);
+        //inputLock = false;
+        //transform.position = new Vector3(0, 0, 0);
+        //transform.rotation = quaternion.Euler(0, 0, 0);
+        //Camera.main.transform.position = new Vector3(0, 0, -5);
+        //Camera.main.transform.rotation = quaternion.Euler(0, 0, 0);
         //******
     }
     
@@ -113,6 +117,8 @@ public class PlayerMove : MonoBehaviour
                 Camera.main.transform.position += new Vector3(x, y, 0);
                 isEndOfMap = false;
             }
+            livingTime += Time.deltaTime;
+            timeText.text = $"생존시간\n{(int)livingTime}초";
         }
     }
 
