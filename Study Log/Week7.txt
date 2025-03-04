@@ -1,15 +1,21 @@
 25.03.03
-C# Basic
-#1 Lecture
+임시공휴일
 
 
 25.03.04
 C# Basic
 #1 Lecture
+이벤트 기반 프로그래밍
+--> Windows App
+게임 엔진은 그래픽 하드웨어를 직접 제어할 수 있는 Low Level API가 필요
+--> DirectX11, SDL
+
+
+SDL --> FrostPunk 
 
 
 25.03.05
-Unity6 Basic
+C# Basic
 #1 Lecture
 
 

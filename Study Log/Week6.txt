@@ -309,7 +309,7 @@ SetCursorPosition()은 해당 메모리에 가서 덮어씌우라는 소리가 �
 25.02.26
 Unity6 Basic
 #1 Lecture
-3Dto2DShooting Game
+3Dto2D Shooting Game dev1
 기본 설정
 **********************************
 * 카메라                          *
@@ -334,8 +334,9 @@ F = ma
 25.02.27
 Unity6 Basic
 #1 Lecture
-불릿 프리펩에 오디오 추가하기
+3Dto2D Shooting Game dev2
+
 
 25.02.28
 Unity6 Basic
-#1 Lecture
+3Dto2D Shooting Game dev3
