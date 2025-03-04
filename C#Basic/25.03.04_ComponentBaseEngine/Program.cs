@@ -16,7 +16,7 @@ namespace _25._03._04_ComponentBaseEngine
             // 메인 윈도우 생성
             IntPtr myWindow = SDL.SDL_CreateWindow(
                 "SDL_Sample", // 창 제목
-                0, 0,         // 윈도우 위치 (X, Y 좌표)
+                1920, 0,         // 윈도우 시작 위치 (X, Y 좌표)
                 1920, 1080,     // 윈도우 크기 (가로, 세로)
                 SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
 
@@ -108,6 +108,7 @@ namespace _25._03._04_ComponentBaseEngine
             }
 
             // 메모리 해제
+            SDL.SDL_DestroyRenderer(renderer);
             SDL.SDL_DestroyWindow(myWindow);
             SDL.SDL_Quit();
         }

@@ -6,12 +6,18 @@
 C# Basic
 #1 Lecture
 이벤트 기반 프로그래밍
+SDL RENDERING
 --> Windows App
 게임 엔진은 그래픽 하드웨어를 직접 제어할 수 있는 Low Level API가 필요
 --> DirectX11, SDL
-
-
 SDL --> FrostPunk 
+
+inGameLogic ==  NetCode  ::   이동, 전투
+DB  ==  Socket  ::  상점, 인벤토리, 로그인
+
+#2 Lecture
+Project Window와 hierarchy, inspector, SceneView/GameView들과 다른 점
+=   메모리에 올라왔느냐 아니면 하드디스크에 존재하느냐
 
 
 25.03.05
