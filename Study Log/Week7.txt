@@ -21,9 +21,12 @@ Project Window와 hierarchy, inspector, SceneView/GameView들과 다른 점
 
 
 25.03.05
-C# Basic
+C# Basic + Unity
 #1 Lecture
-
+비행기를 통한 transform학습
+카메라 이동 구현시 셀카봉아이디어 학습
+내가 했던 카메라 이동 = 플레이어 위치 + 오프셋
+                      플레이어 이동 만큼 카메라도 이동
 
 25.03.06
 Unity6 Basic
