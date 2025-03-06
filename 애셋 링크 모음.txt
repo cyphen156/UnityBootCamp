@@ -1,0 +1,70 @@
+
+3D 에셋 사이트 모음
+
+1 . Unreal 마켓 플레이스
+ https://www.unrealengine.com/marketplace/ko/assets?count=20&sortBy=effectiveDate&sortDir=DESC&start=0
+
+퀵셀 메가 스캔
+https://quixel.com/megascans/
+
+Mixamo
+https://www.mixamo.com/#/
+
+PolyHaven
+https://polyhaven.com/
+
+Sketchfab
+https://sketchfab.com/feed
+
+ArtStation
+https://www.artstation.com/?sort_by=community&dimension=all
+
+Cuberbrush
+https://cubebrush.co/
+
+CGTrader
+https://www.cgtrader.com/
+
+KitBash3D
+https://kitbash3d.com/
+
+SyntySore
+https://syntystore.com/
+
+Itch.io
+https://itch.io/game-assets
+
+블랜더 마켓
+https://blendermarket.com/
+
+다즈 샵
+https://www.daz3d.com/shop/'
+<사운드 및 게임 오픈소스 관련 링크>
+
+Sound
+
+공유마당    https://gongu.copyright.or.kr/gongu/wrt/wrtCl/listWrtSound.do?menuNo=200020    무료
+freesound    https://freesound.org/    무료
+Kenney    https://kenney.nl/assets/sci-fi-sounds    무료
+OpenGameArt.org    https://opengameart.org/content/library-of-game-sounds    무료
+PacDV    https://www.pacdv.com/sounds/    무료
+PartnersInRhyme    https://www.partnersinrhyme.com/pir/PIRsfx.shtml    무료
+pixabay    https://pixabay.com/sound-effects/search/game/    무료
+Soundimage.org    https://soundimage.org/    무료
+THE MOTION MONKEY    https://www.themotionmonkey.co.uk/free-resources/retro-arcade-sounds/    무료
+UE 마켓플레이스    https://www.unrealengine.com/marketplace/ko/content-cat/assets/soundfx    유/무료
+Unity Asset Store    https://assetstore.unity.com/audio    유/무료
+
+Open Source Game Code
+
+Asteroids    HTML5    https://github.com/dmcinnes/HTML5-Asteroids
+CnC_Remastered_Collection        https://github.com/electronicarts/CnC_Remastered_Collection
+DOOM        https://github.com/id-Software/DOOM
+Doom 3 BFG Edition        https://github.com/id-Software/DOOM-3-BFG
+OpenXcom    X-Com 클론    https://github.com/OpenXcom/OpenXcom
+Pixel Dungeon    로그라이크    https://github.com/watabou/pixel-dungeon
+Prince of Persia    페르시아의 왕자    https://github.com/jmechner/Prince-of-Persia-Apple-II
+Quake        https://github.com/id-Software/Quake
+Quake 2        https://github.com/id-Software/Quake-2
+Quake III Arena        https://github.com/id-Software/Quake-III-Arena
+Wolfenstein 3D        https://github.com/id-Software/wolf3d

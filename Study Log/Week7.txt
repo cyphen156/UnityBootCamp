@@ -29,10 +29,19 @@ C# Basic + Unity
                       플레이어 이동 만큼 카메라도 이동
 
 25.03.06
-Unity6 Basic
+Unity6 DeepStudy
+담당강사님  :   손승헌 강사님
 #1 Lecture
+강의 로드맵 설명
+https://noclip.website/
+맵 구성 탐방하기
+
+#2 Lecture
+Unity6Baisc Review
+계산기 만들기   Multiply.cs
+상속 예제 구현  ParentClass.cs  /   Child.cs
 
 
 25.03.07
-Unity6 Basic
+Unity6 DeepStudy
 #1 Lecture
