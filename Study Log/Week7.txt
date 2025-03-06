@@ -28,6 +28,7 @@ C# Basic + Unity
 내가 했던 카메라 이동 = 플레이어 위치 + 오프셋
                       플레이어 이동 만큼 카메라도 이동
 
+
 25.03.06
 Unity6 DeepStudy
 담당강사님  :   손승헌 강사님
@@ -40,6 +41,7 @@ https://noclip.website/
 Unity6Baisc Review
 계산기 만들기   Multiply.cs
 상속 예제 구현  ParentClass.cs  /   Child.cs
+
 
 
 25.03.07
