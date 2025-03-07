@@ -1,78 +1,72 @@
-using StarterAssets;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+
+
+public class PlayerManager : MonoBehaviour
 {
-    public Transform cameraTransform;
-    public Transform playerHead;
-    public Transform playerLookObj;
+    private float moveSpeed = 5.0f; //플레이어 이동 속도
+    public float mouseSensitivity = 100.0f; // 마우스 감도
+    public Transform cameraTransform; // 카메라의 Transform
     public CharacterController characterController;
+    public Transform playerHead; //플레이어 머리 위치(1인칭 모드를 위해서)
+    public float thirdPersonDistance = 3.0f; //3인칭 모드에서 플레이어와 카메라의 거리
+    public Vector3 thirdPersonOffset = new Vector3(0f, 1.5f, 0f); //3인칭 모드에서 카메라 오프셋
+    public Transform playerLookObj; //플레이어 시야 위치
 
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float mouseSensitivity;
-    [SerializeField] private float thirdPersonDistance;
-    [SerializeField] private Vector3 thirdPersonOffset;
-    [SerializeField] private float zoomDistance;
-    [SerializeField] private float zoomSpeed;
-    [SerializeField] private float defaultFov;
-    [SerializeField] private float zoomFov;
-    [SerializeField] private float currentDistance;
-    [SerializeField] private float targetDistance;
-    [SerializeField] private float targetFov;
-    [SerializeField] private bool isZoomed;
-    [SerializeField] private Coroutine zoomCoroutine;
-    [SerializeField] private Camera mainCamera;
+    public float zoomeDistance = 1.0f; //카메라가 확대될 때의 거리(3인칭 모드에서 사용)
+    public float zoomSpeed = 5.0f; // 확대축소가 되는 속도
+    public float defaultFov = 60.0f; //기본 카메라 시야각
+    public float zoomeFov = 30.0f; //확대 시 카메라 시야각(1인칭 모드에서 사용)
 
-    [SerializeField] private float pitch;
-    [SerializeField] private float yaw;
-    [SerializeField] private bool isFirstPerson;
-    [SerializeField] private bool isRotaterAroundPlayer;
+    private float currentDistance; //현재 카메라와의 거리(3인칭 모드)
+    private float targetDistance; //목표 카메라 거리
+    private float targetFov; //목표 FOV
+    private bool isZoomed = false; //확대 여부 확인
+    private Coroutine zoomCoroutine; //코루틴을 사용하여 확대 축소 처리
+    private Camera mainCamera; //카메라 컴포넌트
 
-    // Physics
-    [SerializeField] private float gravity;
-    [SerializeField] private float jumpHeight;
-    [SerializeField] private Vector3 velocity;
-    [SerializeField] private bool isGround;
+    private float pitch = 0.0f; //위아래 회전 값
+    private float yaw = 0.0f; //좌우 회전 값
+    private bool isFirstPerson = false; //1인칭 모드 여부
+    private bool isRotaterAroundPlayer = false; //카메라가 플레이어 주위를 회전하는지 여부 
 
-    private void Awake()
-    {
-        // initalize necessary Vars
-        moveSpeed = 5.0f;
-        mouseSensitivity = 100.0f;
-        //cmaeraTransform;
-        characterController = GetComponent<CharacterController>();
-        //playerHead = 
-        thirdPersonDistance = 3.0f;
-        thirdPersonOffset = new Vector3(0f, 1.5f, 0f);
-        //playerLookObj = 
-        zoomDistance = 1.0f;
-        zoomSpeed = 5.0f;
-        defaultFov = 60.0f;
-        zoomFov = 30.0f;
+    //중력 관련 변수
+    public float gravity = -9.81f;
+    public float jumpHeight = 2.0f;
+    private Vector3 velocity;
+    private bool isGround;
 
-        isZoomed = false;
+    private Animator animator;
+    private float horizontal;
+    private float vertical;
+    private bool isRunning = false;
+    public float walkSpeed = 5.0f;
+    public float runSpeed = 10.0f;
+    private bool isAim = false;
+    private bool isFire = false;
 
-        pitch = 0.0f;
-        yaw = 0.0f;
-        isFirstPerson = false;
-        isRotaterAroundPlayer = false;
-        gravity = -9.81f;
-        jumpHeight = 2.0f;
-    }
+    public AudioClip audioClipFire;
+    private AudioSource audioSource;
+    public AudioClip audioClipWeaponChange;
+    public GameObject RifleM4Obj;
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         currentDistance = thirdPersonDistance;
-        targetDistance = zoomDistance;
+        targetDistance = thirdPersonDistance;
         targetFov = defaultFov;
         mainCamera = cameraTransform.GetComponent<Camera>();
         mainCamera.fieldOfView = defaultFov;
+        animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        RifleM4Obj.SetActive(false);
     }
 
     void Update()
     {
+        //마우스 입력을 받아 카메라와 플레이어 회전 처리
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
@@ -90,13 +84,13 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.V))
         {
             isFirstPerson = !isFirstPerson;
-            Debug.Log($"1인칭모드 : {isFirstPerson}");
+            Debug.Log(isFirstPerson ? "1인칭 모드" : "3인칭 모드");
         }
 
         if (Input.GetKeyDown(KeyCode.F))
         {
             isRotaterAroundPlayer = !isRotaterAroundPlayer;
-            Debug.Log($"플레이어 주변 카메라 회전모드 {isRotaterAroundPlayer}"); ;
+            Debug.Log(isRotaterAroundPlayer ? "카메라가 주위를 회전합니다." : "플레이어가 시야에 따라서 회전합니다.");
         }
 
         if (isFirstPerson)
@@ -110,59 +104,171 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            isZoomed = true;
+            isAim = true;
+            animator.SetBool("isAim", isAim);
+            if (zoomCoroutine != null)
+            {
+                StopCoroutine(zoomCoroutine);
+            }
+
+            if (isFirstPerson)
+            {
+                SetTargetFOV(zoomeFov);
+                zoomCoroutine = StartCoroutine(ZoomFieldOfView(targetFov));
+            }
+            else
+            {
+                SetTargetDistance(zoomeDistance);
+                zoomCoroutine = StartCoroutine(ZoomCamera(targetDistance));
+            }
         }
 
         if (Input.GetMouseButtonUp(1))
         {
-            isZoomed = false;
+            isAim = false;
+            animator.SetBool("isAim", isAim);
+            if (zoomCoroutine != null)
+            {
+                StopCoroutine(zoomCoroutine);
+            }
+
+            if (isFirstPerson)
+            {
+                SetTargetFOV(defaultFov);
+                zoomCoroutine = StartCoroutine(ZoomFieldOfView(targetFov));
+            }
+            else
+            {
+                SetTargetDistance(thirdPersonDistance);
+                zoomCoroutine = StartCoroutine(ZoomCamera(targetDistance));
+            }
         }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (isAim)
+            {
+                isFire = true;
+                animator.SetBool("isFire", isFire);
+                audioSource.PlayOneShot(audioClipFire);
+            }
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            isFire = false;
+            animator.SetBool("isFire", isFire);
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            isRunning = true;
+        }
+
+        else
+        {
+            isRunning = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            audioSource.PlayOneShot(audioClipWeaponChange);
+            animator.SetTrigger("isWeaponChange");
+            RifleM4Obj.SetActive(true);
+        }
+
+        moveSpeed = isRunning ? runSpeed : walkSpeed;
+        animator.SetFloat("Horizontal", horizontal);
+        animator.SetFloat("Vertical", vertical);
+        animator.SetBool("isRunning", isRunning);
+
     }
+
+
 
     void FirstPersonMovement()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-
-        Vector3 move = transform.forward * v + cameraTransform.right * h;
-        move.y = 0f;    // 점프 안뛰엇으니까
-        characterController.Move(move * moveSpeed * Time.deltaTime);    // 이동도 잘 생각해보면 축을 기준으로 이동
-
+        if (!isAim)
+        {
+            horizontal = Input.GetAxis("Horizontal");
+            vertical = Input.GetAxis("Vertical");
+            Vector3 moveDirection = cameraTransform.forward * vertical + cameraTransform.right * horizontal;
+            moveDirection.y = 0;
+            characterController.Move(moveDirection * moveSpeed * Time.deltaTime);
+        }
         cameraTransform.position = playerHead.position;
-        cameraTransform.rotation = Quaternion.Euler(pitch, yaw, 0); // 벡터 합성으로 방향을 바꿔가면서 앞으로만 이동
-
-        transform.rotation = Quaternion.Euler(0.0f, cameraTransform.eulerAngles.y, 0f); // 회전은 항상 축을 기준으로 돌려
+        cameraTransform.rotation = Quaternion.Euler(pitch, yaw, 0);
+        transform.rotation = Quaternion.Euler(0f, cameraTransform.eulerAngles.y, 0);
     }
 
     void ThirdPersonMovement()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
+        if (!isAim)
+        {
+            horizontal = Input.GetAxis("Horizontal");
+            vertical = Input.GetAxis("Vertical");
+            Vector3 move = transform.right * horizontal + transform.forward * vertical;
+            characterController.Move(move * moveSpeed * Time.deltaTime);
+        }
 
-        Vector3 move = transform.right * h + transform.forward * v;
-        characterController.Move(move * moveSpeed * Time.deltaTime);
 
         UpdateCameraPosition();
     }
+
+
     void UpdateCameraPosition()
     {
         if (isRotaterAroundPlayer)
         {
-            //카메라가 플레이어 오르쪽에서 회전하도록 설정
+            //카메라가 플레이어 오른쪽에서 회전하도록 설정
             Vector3 direction = new Vector3(0, 0, -currentDistance);
             Quaternion rotation = Quaternion.Euler(pitch, yaw, 0);
 
-            //카메라를 플레이어의 오른쪽에서 고정된 위치로 이동.
+            //카메라를 플레이어의 오른쪽에서 고정된 위치로 이동
             cameraTransform.position = transform.position + thirdPersonOffset + rotation * direction;
+
             //카메라가 플레이어의 위치를 따라가도록 설정
-            cameraTransform.LookAt(transform.position + new Vector3(0f, thirdPersonOffset.y, 0f));
+            cameraTransform.LookAt(transform.position + new Vector3(0, thirdPersonOffset.y, 0));
         }
         else
-        { //플레이어가 직접 돈다
-            transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+        {
+            //플레이어가 직접 회전하는 모드
+            transform.rotation = Quaternion.Euler(0f, yaw, 0);
             Vector3 direction = new Vector3(0, 0, -currentDistance);
             cameraTransform.position = playerLookObj.position + thirdPersonOffset + Quaternion.Euler(pitch, yaw, 0) * direction;
             cameraTransform.LookAt(playerLookObj.position + new Vector3(0, thirdPersonOffset.y, 0));
         }
+    }
+
+
+    public void SetTargetDistance(float distance)
+    {
+        targetDistance = distance;
+    }
+
+    public void SetTargetFOV(float fov)
+    {
+        targetFov = fov;
+    }
+
+    IEnumerator ZoomCamera(float targetDistance)
+    {
+        while (Mathf.Abs(currentDistance - targetDistance) > 0.01f) //현재 거리에서 목표 거리로 부드럽게 이동
+        {
+            currentDistance = Mathf.Lerp(currentDistance, targetDistance, Time.deltaTime * zoomSpeed);
+            yield return null;
+        }
+
+        currentDistance = targetDistance; // 목표 거리에 도달한 후 값을 고정
+    }
+
+    IEnumerator ZoomFieldOfView(float targetFov)
+    {
+        while (Mathf.Abs(mainCamera.fieldOfView - targetFov) > 0.01f)
+        {
+            mainCamera.fieldOfView = Mathf.Lerp(mainCamera.fieldOfView, targetFov, Time.deltaTime * zoomSpeed);
+            yield return null;
+        }
+        mainCamera.fieldOfView = targetFov;
     }
 }

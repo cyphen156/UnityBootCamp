@@ -47,3 +47,16 @@ Unity6Baisc Review
 25.03.07
 Unity6 DeepStudy
 #1 Lecture
+카메라 토글 줌 인 구현하기
+using coroutine
+
+
+#2 Lecture
+캐릭터 이동/달리기 애니메이션 리깅
+with mixamo
+
+#3 Lecture
+총쏘기 / 무기 숨기기
+
+
+
