@@ -32,7 +32,10 @@ namespace _2DEngine
         {
             for (int i = 0; i < gameObjects.Count; i++)
             {
-                gameObjects[i].Update();
+                foreach(Component component in gameObjects[i].components)
+                {
+                    component.Update();
+                }
             }
         }
 
@@ -40,7 +43,12 @@ namespace _2DEngine
         {
             for (int i = 0; i < gameObjects.Count; i++)
             {
-                gameObjects[i].Render();
+                SpriteRenderer spriteRender = gameObjects[i].GetComponent<SpriteRenderer>();
+                if (spriteRender != null)
+                {
+                    spriteRender.Render();
+                }
+
             }
         }
 
@@ -54,7 +62,7 @@ namespace _2DEngine
             {
                 for (int j = i + 1; j < gameObjects.Count; j++)
                 {
-                    if (gameObjects[i].orderLayer - gameObjects[j].orderLayer > 0)
+                    if (gameObjects[i].GetComponent<SpriteRenderer>().orderLayer - gameObjects[j].GetComponent<SpriteRenderer>().orderLayer > 0)
                     {
                         GameObject temp = gameObjects[i];
                         gameObjects[i] = gameObjects[j];

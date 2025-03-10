@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CameraMove : MonoBehaviour
+public class CameraMove2 : MonoBehaviour
 {
     Transform pleyerTransform;
 

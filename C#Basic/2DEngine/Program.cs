@@ -1,12 +1,12 @@
 ﻿using _2DEngine;
 using System;
+using System.Reflection;
 using System.Text;
 
 namespace _2DEngine
 {
     public class Program
     {
-
         static void Main(string[] args)
         {
             Engine.Instance.Init();

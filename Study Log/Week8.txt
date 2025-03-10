@@ -1,6 +1,26 @@
 25.03.10
 C# Basic
 #1 Lecture
+강사님의 말
+실시간 렌더링은 사기다 ==> 그럴듯 하게 한다
+물리적 공식을 단순화 하는게 최고다
+
+물리기반 렌더링 :: 머테리얼을 생각하면 된다
+수학적 공식을 통해 재질, 부드러움정도, 기본색상 등을 연산해서 결과를 낸다.
+BRDF 공부하기 == 셰이더
+
+Tween
+물체의 벡터 변환을 처리(이동, 회전, 스케일)
+선형 보간과 관련됨
+
+#2 Lecture
+파일 로드 할때(실행 중일 때)는 항상 압축을 모두 풀어서 사용한다
+GameObject::Road(string filename){};
+
+Player -> PlayerController
+
+Change to Component Base Engine 
+
 
 
 25.03.11

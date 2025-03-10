@@ -1,6 +1,8 @@
 ﻿using _2DEngine;
 using SDL2;
 using System;
+using System.Numerics;
+using System.Threading;
 
 namespace _2DEngine
 {
@@ -100,34 +102,111 @@ namespace _2DEngine
             {
                 for (int x = 0; x < scene[y].Length; x++)
                 {
+
+                    GameObject floor = new GameObject();
+                    floor.name = "Floor";
+                    floor.transform.x = x;
+                    floor.transform.y = y;
+
+                    floor.AddComponent<PlayerController>(new PlayerController());
+                    SpriteRenderer spriteRenderer = floor.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                    spriteRenderer.colorKey.r = 255;
+                    spriteRenderer.colorKey.g = 255;
+                    spriteRenderer.colorKey.b = 255;
+                    spriteRenderer.colorKey.a = 255;
+                    spriteRenderer.orderLayer = 0;
+                    spriteRenderer.LoadBmp("floor.bmp");
+
+                    spriteRenderer.Shape = ' ';
+
+                    world.Instanciate(floor);
                     if (scene[y][x] == '*')
                     {
-                        Wall wall = new Wall(x, y, scene[y][x]);
+                        GameObject wall = new GameObject();
+                        wall.name = "wall";
+                        wall.transform.x = x;
+                        wall.transform.y = y;
+
+                        spriteRenderer = wall.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        spriteRenderer.colorKey.r = 255;
+                        spriteRenderer.colorKey.g = 255;
+                        spriteRenderer.colorKey.b = 255;
+                        spriteRenderer.colorKey.a = 255;
+                        spriteRenderer.orderLayer = 1;
+                        spriteRenderer.LoadBmp("wall.bmp");
+
+                        spriteRenderer.Shape = '*';
+
                         world.Instanciate(wall);
                     }
                     else if (scene[y][x] == ' ')
                     {
-                        //Floor floor = new Floor(x, y, scene[y][x]);
-                        //world.Instanciate(floor);
+                        
                     }
                     else if (scene[y][x] == 'P')
                     {
-                        Player player = new Player(x, y, scene[y][x]);
+                        GameObject player = new GameObject();
+                        player.name = "Player";
+                        player.transform.x = x;
+                        player.transform.y = y;
+
+                        player.AddComponent<PlayerController>(new PlayerController());
+                        player.AddComponent<Collider>(new Collider());
+                        spriteRenderer = player.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        spriteRenderer.colorKey.r = 255;
+                        spriteRenderer.colorKey.g = 0;
+                        spriteRenderer.colorKey.b = 255;
+                        spriteRenderer.colorKey.a = 255;
+                        spriteRenderer.orderLayer = 4;
+                        spriteRenderer.LoadBmp("player.bmp", true);
+                        spriteRenderer.processTime = 150.0f;
+                        spriteRenderer.maxCellCountX = 5;
+
+                        spriteRenderer.Shape = 'P';
+
                         world.Instanciate(player);
                     }
                     else if (scene[y][x] == 'M')
                     {
-                        Monster monster = new Monster(x, y, scene[y][x]);
+                        GameObject monster = new GameObject();
+                        monster.name = "Monster";
+                        monster.transform.x = x;
+                        monster.transform.y = y;
+                        monster.AddComponent<MonsterController>(new MonsterController());
+                        monster.GetComponent<MonsterController>().processTime = 500f;
+                        monster.AddComponent<Collider>(new Collider());
+                        spriteRenderer = monster.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        spriteRenderer.colorKey.r = 255;
+                        spriteRenderer.colorKey.g = 255;
+                        spriteRenderer.colorKey.b = 255;
+                        spriteRenderer.colorKey.a = 255;
+                        spriteRenderer.orderLayer = 2;
+                        spriteRenderer.LoadBmp("monster.bmp");
+                        spriteRenderer.processTime = 150.0f;
+
+                        spriteRenderer.Shape = 'M';
+
                         world.Instanciate(monster);
                     }
                     else if (scene[y][x] == 'G')
                     {
-                        Goal goal = new Goal(x, y, scene[y][x]);
+                        GameObject goal = new GameObject();
+                        goal.name = "Goal";
+                        goal.transform.x = x;
+                        goal.transform.y = y;
+
+                        spriteRenderer = goal.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        spriteRenderer.colorKey.r = 255;
+                        spriteRenderer.colorKey.g = 255;
+                        spriteRenderer.colorKey.b = 255;
+                        spriteRenderer.colorKey.a = 255;
+                        spriteRenderer.orderLayer = 3;
+                        spriteRenderer.LoadBmp("goal.bmp");
+
+                        spriteRenderer.Shape = 'G';
+
                         world.Instanciate(goal);
                     }
-
-                    Floor floor = new Floor(x, y, ' ');
-                    world.Instanciate(floor);
                 }
             }
 
