@@ -1,13 +1,17 @@
-﻿using _2DEngine;
-using SDL2;
+﻿using SDL2;
 using System;
 using System.Numerics;
 using System.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace _2DEngine
 {
     public class Engine
     {
+        public World world;
+
+        public IntPtr Font;
+
         private Engine()
         {
 
@@ -32,7 +36,7 @@ namespace _2DEngine
             }
         }
 
-
+        
         protected bool isRunning = true;
 
         public IntPtr myWindow;
@@ -41,6 +45,7 @@ namespace _2DEngine
 
         public bool Init()
         {
+            world = new World();
             if (SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING) < 0)
             {
                 Console.WriteLine("Fail Init.");
@@ -56,7 +61,10 @@ namespace _2DEngine
             myRenderer = SDL.SDL_CreateRenderer(myWindow, -1, SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED |
                 SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC |
                 SDL.SDL_RendererFlags.SDL_RENDERER_TARGETTEXTURE);
-
+            SDL_ttf.TTF_Init();
+            //SDL_ttf.TTF_OpenFont(projectFolder + "/data/", 30);
+            Font = SDL_ttf.TTF_OpenFont("C:/Windows/Fonts/msgothic.ttc", 30);
+            
             return true;
         }
 
@@ -67,6 +75,7 @@ namespace _2DEngine
 
             SDL.SDL_Quit();
 
+            isRunning = false;
             return true;
         }
 
@@ -96,7 +105,6 @@ namespace _2DEngine
             sr.Close();
 
 
-            world = new World();
 
             for (int y = 0; y < scene.Count; y++)
             {
@@ -107,9 +115,7 @@ namespace _2DEngine
                     floor.name = "Floor";
                     floor.transform.x = x;
                     floor.transform.y = y;
-
-                    floor.AddComponent<PlayerController>(new PlayerController());
-                    SpriteRenderer spriteRenderer = floor.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                    SpriteRenderer spriteRenderer = floor.AddComponent<SpriteRenderer>();
                     spriteRenderer.colorKey.r = 255;
                     spriteRenderer.colorKey.g = 255;
                     spriteRenderer.colorKey.b = 255;
@@ -127,7 +133,8 @@ namespace _2DEngine
                         wall.transform.x = x;
                         wall.transform.y = y;
 
-                        spriteRenderer = wall.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        wall.AddComponent<BoxCollider2D>();
+                        spriteRenderer = wall.AddComponent<SpriteRenderer>();
                         spriteRenderer.colorKey.r = 255;
                         spriteRenderer.colorKey.g = 255;
                         spriteRenderer.colorKey.b = 255;
@@ -150,9 +157,10 @@ namespace _2DEngine
                         player.transform.x = x;
                         player.transform.y = y;
 
-                        player.AddComponent<PlayerController>(new PlayerController());
-                        player.AddComponent<Collider>(new Collider());
-                        spriteRenderer = player.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        player.AddComponent<PlayerController>();
+                        //collider = player.AddComponent<Collider2D>();
+                        spriteRenderer = player.AddComponent<SpriteRenderer>();
+                        player.AddComponent< CharacterController2D > ();
                         spriteRenderer.colorKey.r = 255;
                         spriteRenderer.colorKey.g = 0;
                         spriteRenderer.colorKey.b = 255;
@@ -172,10 +180,11 @@ namespace _2DEngine
                         monster.name = "Monster";
                         monster.transform.x = x;
                         monster.transform.y = y;
-                        monster.AddComponent<MonsterController>(new MonsterController());
-                        monster.GetComponent<MonsterController>().processTime = 500f;
-                        monster.AddComponent<Collider>(new Collider());
-                        spriteRenderer = monster.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        monster.AddComponent<AIController>();
+                        monster.GetComponent<AIController>().processTime = 500f;
+                        //collider = monster.AddComponent<Collider2D>();
+                        monster.AddComponent<CharacterController2D>();
+                        spriteRenderer = monster.AddComponent<SpriteRenderer>();
                         spriteRenderer.colorKey.r = 255;
                         spriteRenderer.colorKey.g = 255;
                         spriteRenderer.colorKey.b = 255;
@@ -195,7 +204,9 @@ namespace _2DEngine
                         goal.transform.x = x;
                         goal.transform.y = y;
 
-                        spriteRenderer = goal.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        goal.AddComponent<BoxCollider2D>();
+                        goal.GetComponent<Collider2D>().isTrigger = true;
+                        spriteRenderer = goal.AddComponent<SpriteRenderer>();
                         spriteRenderer.colorKey.r = 255;
                         spriteRenderer.colorKey.g = 255;
                         spriteRenderer.colorKey.b = 255;
@@ -208,13 +219,25 @@ namespace _2DEngine
                         world.Instanciate(goal);
                     }
                 }
-            }
+                //심판 생성
+                GameObject gameManager = new GameObject();
+                gameManager.name = "GameManager";
 
+                gameManager.AddComponent<GameManager>();
+                world.Instanciate(gameManager);
+
+            }
             //loading complete
             //sort
             world.Sort();
+
+            Awake();
         }
 
+        public void Awake()
+        {
+            world.Awake();
+        }
         public void ProcessInput()
         {
             Input.Process();
@@ -272,7 +295,10 @@ namespace _2DEngine
             }
         }
 
+        public void SetSortCompare(World.SortCompare inSortCompare)
+        {
+            world.sortCompare = inSortCompare;
+        }
 
-        public World world;
     }
 }

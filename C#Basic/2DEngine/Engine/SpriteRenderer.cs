@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace _2DEngine
 {
-    public class SpriteRenderer : Component
+    public class SpriteRenderer : Renderer
     {
         public int orderLayer;
 
@@ -20,8 +20,8 @@ namespace _2DEngine
         protected IntPtr myTexture;
         protected IntPtr mySurface;
 
-        protected int spriteIndexX = 0;
-        protected int spriteIndexY = 0;
+        public int spriteIndexX = 0;
+        public int spriteIndexY = 0;
 
         public SDL.SDL_Color colorKey;
 
@@ -39,7 +39,10 @@ namespace _2DEngine
         {
 
         }
-
+        ~SpriteRenderer()
+        {
+            SDL.SDL_DestroyTexture(myTexture);
+        }
         public override void Update()
         {
 
@@ -105,7 +108,7 @@ namespace _2DEngine
             }
         }
 
-        public virtual void Render()
+        public override void Render()
         {
             int X = gameObject.transform.x;
             int Y = gameObject.transform.y;

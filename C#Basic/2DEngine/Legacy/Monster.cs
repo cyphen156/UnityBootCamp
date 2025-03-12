@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace _2DEngine.Legacy
 {
     /// <summary>
-    /// Monster -> MonsterController
+    /// Monster -> AIController
     /// </summary>
     public class Monster : GameObject
     {

@@ -9,6 +9,7 @@ namespace _2DEngine
     public abstract class Component
     {
         public GameObject gameObject;
+        public Transform transform;
         public abstract void Update();
 
         public virtual void Awake() 
