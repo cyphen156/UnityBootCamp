@@ -36,8 +36,13 @@ public delegate int Command(int a, int b)
 
 25.03.12
 Unity6 Basic
-#1 Lecture
+#오전 강의
+애니메이션 컨트롤러 수정하기
+캐릭터 상 하체 분리해서 제어하기
+물리 엔진 공부하기
+레이캐스팅 == 레이 트레이스
 
+오후에는 탈출맵 만들기
 
 25.03.13
 Unity6 Basic

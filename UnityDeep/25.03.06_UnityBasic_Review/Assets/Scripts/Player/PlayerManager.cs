@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 
 
 
@@ -22,7 +24,7 @@ public class PlayerManager : MonoBehaviour
     private float currentDistance; //현재 카메라와의 거리(3인칭 모드)
     private float targetDistance; //목표 카메라 거리
     private float targetFov; //목표 FOV
-    private bool isZoomed = false; //확대 여부 확인
+    //private bool isZoomed = false; //확대 여부 확인
     private Coroutine zoomCoroutine; //코루틴을 사용하여 확대 축소 처리
     private Camera mainCamera; //카메라 컴포넌트
 
@@ -40,17 +42,31 @@ public class PlayerManager : MonoBehaviour
     private Animator animator;
     private float horizontal;
     private float vertical;
-    private bool isRunning = false;
+    private bool IsRunning = false;
     public float walkSpeed = 5.0f;
     public float runSpeed = 10.0f;
-    private bool isAim = false;
-    private bool isFire = false;
+    private bool IsAim = false;
+    private bool IsFire = false;
+    private bool IsRapidFire = false;
 
+
+    private int animationSpeed = 1;
+    private string currentAnimation;
     public AudioClip audioClipFire;
+    public AudioClip audioClipRapidFire;
+
     private AudioSource audioSource;
+    public AudioClip audioClipWalk;
     public AudioClip audioClipWeaponChange;
+    public AudioClip resetAudio;
     public GameObject RifleM4Obj;
 
+    // 충돌 처리시 사용할 변수
+    public Vector3 startPosition;
+    public Quaternion startRotation;
+
+    public Transform aimTargetTransform;
+    private float weaponMaxDistance = 100.0f;
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -62,9 +78,43 @@ public class PlayerManager : MonoBehaviour
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         RifleM4Obj.SetActive(false);
+        startPosition = transform.position;
+        startRotation = transform.rotation;
+        StartCoroutine(RapidFire());
     }
 
     void Update()
+    {
+        animator.speed = animationSpeed;
+        
+        AnimatorStateInfo animStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (animStateInfo.IsName(currentAnimation) && animStateInfo.normalizedTime >= 1.0f)
+        // 현재 재생되고 있는 애니메이션의 이름
+        {
+            currentAnimation = "";
+            animator.Play(currentAnimation);
+        }
+        MouseSet();
+
+        CameraSet();
+
+        PlayerMovement();
+
+        AimSet();
+
+        WeaponFire();
+
+        Run();
+
+        WeaponChange();
+
+        AnimationSet();
+
+        PickUp();
+    }
+
+    void MouseSet()
     {
         //마우스 입력을 받아 카메라와 플레이어 회전 처리
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
@@ -80,7 +130,9 @@ public class PlayerManager : MonoBehaviour
         {
             velocity.y = -2f;
         }
-
+    }
+    void CameraSet()
+    {
         if (Input.GetKeyDown(KeyCode.V))
         {
             isFirstPerson = !isFirstPerson;
@@ -92,7 +144,9 @@ public class PlayerManager : MonoBehaviour
             isRotaterAroundPlayer = !isRotaterAroundPlayer;
             Debug.Log(isRotaterAroundPlayer ? "카메라가 주위를 회전합니다." : "플레이어가 시야에 따라서 회전합니다.");
         }
-
+    }
+    void PlayerMovement()
+    {
         if (isFirstPerson)
         {
             FirstPersonMovement();
@@ -101,11 +155,80 @@ public class PlayerManager : MonoBehaviour
         {
             ThirdPersonMovement();
         }
+    }
+    void WeaponChange()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            audioSource.PlayOneShot(audioClipWeaponChange);
+            animator.SetTrigger("IsWeaponChange");
+            RifleM4Obj.SetActive(true);
+        }
+    }
+    void Run()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            IsRunning = true;
+        }
 
+        else
+        {
+            IsRunning = false;
+        }
+        moveSpeed = IsRunning ? runSpeed : walkSpeed;
+    }
+
+    void WeaponFire()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (IsAim)
+            {
+                weaponMaxDistance = 200.0f;
+                IsFire = true;
+                //animator.SetBool("IsFire", IsFire);
+                animator.SetTrigger("Fire");
+
+                Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
+
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, weaponMaxDistance))
+                {
+                    Debug.Log("Hit : " + hit.collider.gameObject.name);
+                    Debug.DrawLine(ray.origin, hit.point, Color.red, 0.6f);
+                }
+                else
+                {
+                    Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 0.6f);
+                }
+                audioSource.PlayOneShot(audioClipFire);
+            }
+        }
+        if (Input.GetMouseButton(0))
+        {
+            if (IsAim)
+            {
+                IsRapidFire = true;                
+            }
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            IsFire = false;
+            IsRapidFire = false;
+
+            //animator.SetBool("IsFire", IsFire);
+        }
+    }
+    void AimSet()
+    {
         if (Input.GetMouseButtonDown(1))
         {
-            isAim = true;
-            animator.SetBool("isAim", isAim);
+            IsAim = true;
+            //animator.SetBool("IsAim", IsAim);
+            animator.SetLayerWeight(1, 1);
+
             if (zoomCoroutine != null)
             {
                 StopCoroutine(zoomCoroutine);
@@ -125,8 +248,9 @@ public class PlayerManager : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1))
         {
-            isAim = false;
-            animator.SetBool("isAim", isAim);
+            IsAim = false;
+            //animator.SetBool("IsAim", IsAim);
+            animator.SetLayerWeight(1, 0);
             if (zoomCoroutine != null)
             {
                 StopCoroutine(zoomCoroutine);
@@ -144,51 +268,54 @@ public class PlayerManager : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (isAim)
-            {
-                isFire = true;
-                animator.SetBool("isFire", isFire);
-                audioSource.PlayOneShot(audioClipFire);
-            }
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            isFire = false;
-            animator.SetBool("isFire", isFire);
-        }
-
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            isRunning = true;
-        }
-
-        else
-        {
-            isRunning = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            audioSource.PlayOneShot(audioClipWeaponChange);
-            animator.SetTrigger("isWeaponChange");
-            RifleM4Obj.SetActive(true);
-        }
-
-        moveSpeed = isRunning ? runSpeed : walkSpeed;
-        animator.SetFloat("Horizontal", horizontal);
-        animator.SetFloat("Vertical", vertical);
-        animator.SetBool("isRunning", isRunning);
-
     }
 
+    
 
+    IEnumerator RapidFire()
+    {
+        while (true)
+        {
+            if (IsFire && IsRapidFire)
+            {
+                Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
 
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, weaponMaxDistance))
+                {
+                    GameObject hitObject = hit.collider.gameObject;
+                    Debug.Log("Hit : " + hitObject.name);
+                    Debug.DrawLine(ray.origin, hit.point, Color.red, 0.6f);
+                    if (hitObject.layer == 6)
+                    {
+                        hitObject.GetComponent<ZombieManager>().OnHit();
+                    }
+                }
+                else
+                {
+                    Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 0.6f);
+                }
+                audioSource.Stop();
+                animator.SetTrigger("Fire");
+                audioSource.PlayOneShot(audioClipRapidFire);
+                yield return new WaitForSeconds(0.1f);
+            }
+            yield return null;
+        }
+    }
+
+    
+    
+    void AnimationSet()
+    {
+        animator.SetFloat("Horizontal", horizontal);
+        animator.SetFloat("Vertical", vertical);
+        animator.SetBool("IsRunning", IsRunning);
+    }
     void FirstPersonMovement()
     {
-        if (!isAim)
+        //if (!IsAim)
         {
             horizontal = Input.GetAxis("Horizontal");
             vertical = Input.GetAxis("Vertical");
@@ -203,15 +330,13 @@ public class PlayerManager : MonoBehaviour
 
     void ThirdPersonMovement()
     {
-        if (!isAim)
+        //if (!IsAim)
         {
             horizontal = Input.GetAxis("Horizontal");
             vertical = Input.GetAxis("Vertical");
             Vector3 move = transform.right * horizontal + transform.forward * vertical;
             characterController.Move(move * moveSpeed * Time.deltaTime);
         }
-
-
         UpdateCameraPosition();
     }
 
@@ -237,6 +362,8 @@ public class PlayerManager : MonoBehaviour
             Vector3 direction = new Vector3(0, 0, -currentDistance);
             cameraTransform.position = playerLookObj.position + thirdPersonOffset + Quaternion.Euler(pitch, yaw, 0) * direction;
             cameraTransform.LookAt(playerLookObj.position + new Vector3(0, thirdPersonOffset.y, 0));
+            // RayCasting
+            UpdateAimTarget();
         }
     }
 
@@ -270,5 +397,48 @@ public class PlayerManager : MonoBehaviour
             yield return null;
         }
         mainCamera.fieldOfView = targetFov;
+    }
+
+    void PlayWeaponChangeSound()
+    {
+        if (audioClipWeaponChange != null)
+        {
+            audioSource.PlayOneShot(audioClipWeaponChange);
+        }
+    }
+
+    void PickUp()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            animator.SetLayerWeight(1, 0);
+            animator.SetTrigger("PickUp");
+        }
+    }
+    public void ResetSequence()
+    {
+        // 집에 가라
+        //StartCoroutine(PlayResetAudio());
+        audioSource.PlayOneShot(resetAudio);
+        characterController.Move(startPosition - transform.position);
+        //transform.position = startPosition;
+        transform.rotation = startRotation;
+    }
+    IEnumerator PlayResetAudio()
+    {
+        audioSource.PlayOneShot(resetAudio);
+        yield return null;
+    }
+
+    /// <summary>
+    /// RayCast 
+    /// Camera To Target (Aimed Target)
+    /// </summary>
+    void UpdateAimTarget()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        aimTargetTransform.position = ray.GetPoint(10.0f);
+        //aimTargetTransform = ray.transform
+        //Physics.Raycast(ray, aimTargetTransform, 1000f, 1111111);
     }
 }

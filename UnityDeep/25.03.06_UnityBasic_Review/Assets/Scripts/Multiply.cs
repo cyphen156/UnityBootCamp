@@ -2,7 +2,6 @@
 
 public class Multiply : MonoBehaviour
 {
-    int start;
     int end;
     int[,] array;
     float currentTime;
@@ -19,7 +18,6 @@ public class Multiply : MonoBehaviour
     }
     void Start()
     {
-        start = 0;
         end = 9;
         for (int i = 0; i < end; ++i)
         {
