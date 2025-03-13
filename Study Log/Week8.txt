@@ -47,8 +47,36 @@ Unity6 Basic
 25.03.13
 Unity6 Basic
 #1 Lecture
+RayCast _ Single / Multi
+파란색으로 일단 그리고
+빨간색으로 덮어씌움
 
+트레일 렌더러 <- 이런거 있다
 
+Box CAST
+영역 베이스 감지
+
+#2 Lecture
+AI 설계하기
+상태
+    대기하는중
+    공격하는중
+    피격당하는중
+    도주하는 중
+    쫒아가는중
+    
+행동
+    가만히 있는다
+    플레이어를 쫒아간다.
+    죽는다
+    스폰한다
+    제자리로 돌아간다
+    순찰한다
+    공격한다
+    도주한다 
+
+ZombieManager / HPController로 분리 
+HPController --> HitEffecter로 바꾸기
 25.03.14
 Unity6 Basic
 #1 Lecture

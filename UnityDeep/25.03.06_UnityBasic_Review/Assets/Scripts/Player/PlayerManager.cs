@@ -1,6 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.Audio;
 
 
@@ -49,6 +53,9 @@ public class PlayerManager : MonoBehaviour
     private bool IsFire = false;
     private bool IsRapidFire = false;
 
+    //bool isGetM4Item = false;     // 강사님 코드
+    public bool isUseWeapon = false;    // 강사님 코드
+    public bool isGetWeaponItem = false;
 
     private int animationSpeed = 1;
     private string currentAnimation;
@@ -61,14 +68,31 @@ public class PlayerManager : MonoBehaviour
     public AudioClip resetAudio;
     public GameObject RifleM4Obj;
 
+    public MultiAimConstraint multiAimConstranint;
+    public Vector3 boxSize = new Vector3(1.0f, 1.0f, 1.0f);
+    public float castDistance = 5.0f;
+    public LayerMask itemLayer;
+    public Transform itemGetPos;
+
+
     // 충돌 처리시 사용할 변수
     public Vector3 startPosition;
     public Quaternion startRotation;
 
     public Transform aimTargetTransform;
     private float weaponMaxDistance = 100.0f;
+    public GameObject crossHair;
+    public HashSet<string> itemList;
+    public LayerMask TargetLayerMask;
+    public Transform EffectPos;
+    public ParticleSystem gunFireEffect;    // m4Effect
+
+    private float rifleFireDelay = 0.5f;
+
     void Start()
     {
+        itemList = new HashSet<string>();
+        itemList.Add("assault1");
         Cursor.lockState = CursorLockMode.Locked;
         currentDistance = thirdPersonDistance;
         targetDistance = thirdPersonDistance;
@@ -81,6 +105,7 @@ public class PlayerManager : MonoBehaviour
         startPosition = transform.position;
         startRotation = transform.rotation;
         StartCoroutine(RapidFire());
+        crossHair.SetActive(false);
     }
 
     void Update()
@@ -112,6 +137,7 @@ public class PlayerManager : MonoBehaviour
         AnimationSet();
 
         PickUp();
+        Operate();
     }
 
     void MouseSet()
@@ -158,11 +184,21 @@ public class PlayerManager : MonoBehaviour
     }
     void WeaponChange()
     {
+        // 무기 장착
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             audioSource.PlayOneShot(audioClipWeaponChange);
             animator.SetTrigger("IsWeaponChange");
             RifleM4Obj.SetActive(true);
+            isUseWeapon = true;
+        }
+        // 무기 장착 해제
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            audioSource.PlayOneShot(audioClipWeaponChange);
+            animator.SetTrigger("IsWeaponChange");
+            RifleM4Obj.SetActive(false);
+            isUseWeapon = false;
         }
     }
     void Run()
@@ -204,6 +240,8 @@ public class PlayerManager : MonoBehaviour
                     Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 0.6f);
                 }
                 audioSource.PlayOneShot(audioClipFire);
+                gunFireEffect.Play();
+                //StartCoroutine(SetFireDelay(false));
             }
         }
         if (Input.GetMouseButton(0))
@@ -221,10 +259,18 @@ public class PlayerManager : MonoBehaviour
             //animator.SetBool("IsFire", IsFire);
         }
     }
+    
+    IEnumerator SetFireDelay(bool v)
+    {
+        yield return new WaitForSeconds(rifleFireDelay);
+        IsFire = v;
+    }
+
     void AimSet()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) && isGetWeaponItem && isUseWeapon)// isGetM4Item
         {
+            crossHair.SetActive(true);
             IsAim = true;
             //animator.SetBool("IsAim", IsAim);
             animator.SetLayerWeight(1, 1);
@@ -248,7 +294,9 @@ public class PlayerManager : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1))
         {
+            crossHair.SetActive(false);
             IsAim = false;
+            multiAimConstranint.data.offset = new Vector3(0, 0, 0);
             //animator.SetBool("IsAim", IsAim);
             animator.SetLayerWeight(1, 0);
             if (zoomCoroutine != null)
@@ -270,8 +318,6 @@ public class PlayerManager : MonoBehaviour
 
     }
 
-    
-
     IEnumerator RapidFire()
     {
         while (true)
@@ -280,18 +326,45 @@ public class PlayerManager : MonoBehaviour
             {
                 Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
 
-                RaycastHit hit;
-
-                if (Physics.Raycast(ray, out hit, weaponMaxDistance))
+                //RaycastHit hit;
+                RaycastHit[] hits;
+                TargetLayerMask = 1 << 6;
+                //if (Physics.Raycast(ray, out hit, weaponMaxDistance, TargetLayerMask))
+                //// single RayCasting
+                //{
+                //    GameObject hitObject = hit.collider.gameObject;
+                //    Debug.Log("Hit : " + hitObject.name);
+                //    Debug.DrawLine(ray.origin, hit.point, Color.red, 0.6f);
+                //    if (hitObject.layer == 6)
+                //    {
+                //        hitObject.GetComponent<ZombieManager>().OnHit();
+                //    }
+                //}
+                // Multi RayCasting
+                hits = Physics.RaycastAll(ray, weaponMaxDistance, TargetLayerMask);
+                if (hits.Length > 0)
                 {
-                    GameObject hitObject = hit.collider.gameObject;
-                    Debug.Log("Hit : " + hitObject.name);
-                    Debug.DrawLine(ray.origin, hit.point, Color.red, 0.6f);
-                    if (hitObject.layer == 6)
+                    int cnt = 0;
+                    Vector3 endPoint = ray.origin + ray.direction * weaponMaxDistance;
+                    Debug.DrawLine(ray.origin, endPoint, Color.blue, 0.6f);
+
+                    foreach (RaycastHit hit1 in hits)
                     {
-                        hitObject.GetComponent<ZombieManager>().OnHit();
+                        if (cnt < 2)
+                        {
+                            GameObject hitObject = hit1.collider.gameObject;
+                            Debug.Log("Hit : " + hitObject.name);
+                            Debug.DrawLine(ray.origin, hit1.point, Color.red, 0.6f);
+                            if ((TargetLayerMask & (1 << hitObject.layer)) != 0)
+                            {
+                                Debug.Log("OnHit1 called");
+                                hitObject.GetComponent<HPController>().OnHit();
+                            }
+                        }
+                        cnt++;
                     }
                 }
+
                 else
                 {
                     Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 0.6f);
@@ -305,8 +378,6 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    
-    
     void AnimationSet()
     {
         animator.SetFloat("Horizontal", horizontal);
@@ -440,5 +511,35 @@ public class PlayerManager : MonoBehaviour
         aimTargetTransform.position = ray.GetPoint(10.0f);
         //aimTargetTransform = ray.transform
         //Physics.Raycast(ray, aimTargetTransform, 1000f, 1111111);
+    }
+
+    void Operate()
+    {
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (Input.GetKeyDown(KeyCode.E) && !stateInfo.IsName("PickUp"))
+        {
+            animator.SetTrigger("Operate");
+            
+            Vector3 origin = itemGetPos.position;
+            Vector3 direction = itemGetPos.forward;
+            RaycastHit[] hits;
+            hits = Physics.BoxCastAll(origin, boxSize / 2, direction, Quaternion.identity, castDistance, itemLayer);
+            string name;
+            foreach(RaycastHit hit in hits)
+            {
+                name = hit.collider.name;
+                if (itemList.Contains(name))
+                {
+                    Debug.Log("이미 인벤토리에 있음 한개만 가지고 다니센");
+                }
+                else
+                {
+                    itemList.Add(name);
+                    hit.collider.gameObject.SetActive(false);
+                }
+                Debug.Log("Item : " + hit.collider.name);
+            }
+        }
     }
 }
