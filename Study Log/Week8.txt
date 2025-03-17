@@ -35,7 +35,7 @@ public delegate int Command(int a, int b)
 주로 네트워크, 이벤트 처리 할 때 사용
 
 25.03.12
-Unity6 Basic
+Unity6 Deep
 #오전 강의
 애니메이션 컨트롤러 수정하기
 캐릭터 상 하체 분리해서 제어하기
@@ -45,7 +45,7 @@ Unity6 Basic
 오후에는 탈출맵 만들기
 
 25.03.13
-Unity6 Basic
+Unity6 Deep
 #1 Lecture
 RayCast _ Single / Multi
 파란색으로 일단 그리고
@@ -77,6 +77,10 @@ AI 설계하기
 
 ZombieManager / HPController로 분리 
 HPController --> HitEffecter로 바꾸기
+
+
 25.03.14
-Unity6 Basic
+Unity6 Deep
 #1 Lecture
+
+

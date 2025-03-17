@@ -138,6 +138,7 @@ public class PlayerManager : MonoBehaviour
 
         PickUp();
         Operate();
+        //DubugBox();
     }
 
     void MouseSet()
@@ -537,9 +538,43 @@ public class PlayerManager : MonoBehaviour
                 {
                     itemList.Add(name);
                     hit.collider.gameObject.SetActive(false);
+                    isGetWeaponItem = true;
                 }
                 Debug.Log("Item : " + hit.collider.name);
             }
         }
+    }
+    void DubugBox(Vector3 origin, Vector3 direction)
+    {
+        Vector3 endPoint = origin + direction * castDistance;
+
+        Vector3[] corners = new Vector3[8];
+        corners[0] = origin + new Vector3(-boxSize.x, -boxSize.y, -boxSize.z) / 2;
+        corners[1] = origin + new Vector3(boxSize.x, -boxSize.y, -boxSize.z) / 2;
+        corners[2] = origin + new Vector3(-boxSize.x, boxSize.y, -boxSize.z) / 2;
+        corners[3] = origin + new Vector3(boxSize.x, boxSize.y, -boxSize.z) / 2;
+        corners[4] = origin + new Vector3(-boxSize.x, -boxSize.y, -boxSize.z) / 2;
+        corners[5] = origin + new Vector3(boxSize.x, -boxSize.y, boxSize.z) / 2;
+        corners[6] = origin + new Vector3(-boxSize.x, boxSize.y, boxSize.z) / 2;
+        corners[7] = origin + new Vector3(boxSize.x, -boxSize.y, boxSize.z) / 2;
+
+        Debug.DrawLine(corners[0], corners[1], Color.green, 3f);
+        Debug.DrawLine(corners[1], corners[3], Color.green, 3f);
+        Debug.DrawLine(corners[3], corners[2], Color.green, 3f);
+        Debug.DrawLine(corners[2], corners[0], Color.green, 3f);
+        Debug.DrawLine(corners[4], corners[5], Color.green, 3f);
+        Debug.DrawLine(corners[5], corners[7], Color.green, 3f);
+        Debug.DrawLine(corners[7], corners[6], Color.green, 3f);
+        Debug.DrawLine(corners[6], corners[4], Color.green, 3f);
+        Debug.DrawLine(corners[0], corners[4], Color.green, 3f);
+        Debug.DrawLine(corners[1], corners[5], Color.green, 3f);
+        Debug.DrawLine(corners[2], corners[6], Color.green, 3f);
+        Debug.DrawLine(corners[3], corners[7], Color.green, 3f);
+        Debug.DrawLine(origin, direction * castDistance, Color.green);
+
+
+        Debug.DrawLine(corners[0], corners[1], Color.green, 3f);
+        Debug.DrawLine(corners[0], corners[1], Color.green, 3f);
+        Debug.DrawLine(corners[0], corners[1], Color.green, 3f);
     }
 }
