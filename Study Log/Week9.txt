@@ -61,12 +61,22 @@ TCP/IP - 네트워크 계층이 7계층에서 4계층이 된 이유?
 25.03.18
 C# Basic
 #1 Lecture
+오전 강의 서버와 파일 주고받기 미션
+
+// 네트워크 할 때 패킷을 만드는 방법과 이유
+나중에 배워보자 UNIX Network Programming
+
+binary to text ==> Base64
+
+#2 Lecture 
+UDP데이터 전송하기
+
 
 
 25.03.19
 Unity6 Deep
 #1 Lecture
-
+부위별 데미지에 대한 아이디어
 
 25.03.20
 Unity6 Deep

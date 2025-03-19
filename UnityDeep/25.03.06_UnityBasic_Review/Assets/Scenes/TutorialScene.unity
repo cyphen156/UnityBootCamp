@@ -8339,6 +8339,8 @@ MonoBehaviour:
     m_Bits: 64
   EffectPos: {fileID: 1029306019}
   gunFireEffect: {fileID: 5920798270645775531, guid: 8232afc6727abd54f87b1b0e44ec6619, type: 3}
+  AttackParticle: {fileID: 6564037073985687246, guid: e39197fc0467e184ebb276787e856863, type: 3}
+  audioClipHit: {fileID: 8300000, guid: 8c1811000bbc01649b42010a36069be0, type: 3}
 --- !u!114 &6491700974815652170
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -22,7 +22,7 @@ namespace Client2
             byte[] sendBuffer = new byte[BUFSIZE];
             byte[] recvBuffer = new byte[BUFSIZE];
 
-            string message = "100 + 200";
+            string message = "I100 + 200";
 
             sendBuffer = Encoding.UTF8.GetBytes(message);
 

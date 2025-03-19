@@ -52,7 +52,7 @@ namespace Server
 
                     byte[] SendBuffer = new byte[BUFSIZE];
                     int result = int.Parse(str[0]) + int.Parse(str[1]);
-
+                    
                     Console.WriteLine();
 
                     SendBuffer = Encoding.UTF8.GetBytes(result.ToString());

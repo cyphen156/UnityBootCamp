@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.Audio;
@@ -86,6 +87,8 @@ public class PlayerManager : MonoBehaviour
     public LayerMask TargetLayerMask;
     public Transform EffectPos;
     public ParticleSystem gunFireEffect;    // m4Effect
+    public ParticleSystem AttackParticle;    
+    public AudioClip audioClipHit;
 
     private float rifleFireDelay = 0.5f;
 
@@ -359,6 +362,9 @@ public class PlayerManager : MonoBehaviour
                             if ((TargetLayerMask & (1 << hitObject.layer)) != 0)
                             {
                                 Debug.Log("OnHit1 called");
+                                ParticleSystem particle = Instantiate(AttackParticle, hit1.point, Quaternion.identity);
+                                AttackParticle.Play();
+                                audioSource.PlayOneShot(audioClipHit);
                                 hitObject.GetComponent<HPController>().OnHit();
                             }
                         }
