@@ -3,13 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Transactions;
+using Unity.VisualScripting;
 using UnityEditor.Rendering;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
-
-
+using static UnityEngine.Random;
 public class PlayerManager : MonoBehaviour
 {
     private float moveSpeed = 5.0f; //플레이어 이동 속도
@@ -91,6 +94,31 @@ public class PlayerManager : MonoBehaviour
     public AudioClip audioClipHit;
 
     private float rifleFireDelay = 0.5f;
+    public GameObject flashLight;
+    public bool isFlashLightOn = false;
+    public AudioClip audioClipFlashLight;
+    /// <summary>
+    ///  UIControll
+    /// </summary>
+    public Text bulletText;
+    private int maxBulletMagazine = 30;
+    private int fireBulletCount = 30;
+    private int saveBulletCount = 120;
+    private bool isPaused = false;
+    public GameObject pauseObj;
+
+
+    // 총기반동
+    private int shotGunRayCount = 5;
+    private float shotGunSpreadAngle = 10.0f;
+    private float recoilStrength = 2.0f;
+    private float maxRecoilAngle = 10.0f;
+    private float currentRecoil = 0.0f;
+    private float shakeDuration = 0.1f;
+    private float shakeMagnitude = 0.1f;
+    private Vector3 originalCameraPosition;
+    private Coroutine cameraShakeCoroutine;
+
 
     void Start()
     {
@@ -109,40 +137,165 @@ public class PlayerManager : MonoBehaviour
         startRotation = transform.rotation;
         StartCoroutine(RapidFire());
         crossHair.SetActive(false);
+        pauseObj.SetActive(false);
+        bulletText.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        animator.speed = animationSpeed;
-        
-        AnimatorStateInfo animStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-        if (animStateInfo.IsName(currentAnimation) && animStateInfo.normalizedTime >= 1.0f)
-        // 현재 재생되고 있는 애니메이션의 이름
+        PauseMenu();
+        if (!isPaused)
         {
-            currentAnimation = "";
-            animator.Play(currentAnimation);
+            animator.speed = animationSpeed;
+        
+            AnimatorStateInfo animStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+            if (animStateInfo.IsName(currentAnimation) && animStateInfo.normalizedTime >= 1.0f)
+            // 현재 재생되고 있는 애니메이션의 이름
+            {
+                currentAnimation = "";
+                animator.Play(currentAnimation);
+            }
+
+            if (currentRecoil > 0)
+            {
+                currentRecoil -= recoilStrength * Time.deltaTime;
+                currentRecoil = Mathf.Clamp(currentRecoil, 0.0f, maxRecoilAngle);
+
+                Quaternion currentRotation = Camera.main.transform.rotation;
+                Quaternion recoilRotation = Quaternion.Euler(-currentRecoil, 0, 0);
+                Camera.main.transform.rotation = currentRotation * recoilRotation;
+            }
+            MouseSet();
+
+            CameraSet();
+
+            PlayerMovement();
+
+            AimSet();
+
+            WeaponFire();
+
+            Run();
+
+            WeaponChange();
+
+            AnimationSet();
+
+            PickUp();
+            Operate();
+            FillAmmor();
+            ActionFlashLight();
+
         }
-        MouseSet();
-
-        CameraSet();
-
-        PlayerMovement();
-
-        AimSet();
-
-        WeaponFire();
-
-        Run();
-
-        WeaponChange();
-
-        AnimationSet();
-
-        PickUp();
-        Operate();
         //DubugBox();
     }
+
+    IEnumerator CameraShake(float shakeDuration, float shakeMagnitude)
+    {
+        float elapsed = 0.0f;
+        Transform originTransform =  Camera.main.transform;
+        while (elapsed < shakeDuration)
+        {
+            float offsetX = UnityEngine.Random.Range(-1.0f, 1.0f) * shakeMagnitude;
+            float offsetY = UnityEngine.Random.Range(-1.0f, 1.0f) * shakeMagnitude;
+            
+            Camera.main.transform.position = originTransform.position + new Vector3(offsetX, offsetY, 0.0f);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        Camera.main.transform.position = originTransform.position;
+        Camera.main.transform.rotation = originTransform.rotation;
+
+    }
+    void StartCameraShake()
+    {
+        if (cameraShakeCoroutine != null)
+        {
+            StopCoroutine(cameraShakeCoroutine);
+        }
+        cameraShakeCoroutine = StartCoroutine(CameraShake(shakeDuration, shakeMagnitude));
+    }
+    void ApplyRecoil()
+    {
+        Quaternion currentRotation = Camera.main.transform.rotation;
+
+        Quaternion recoilRotation = Quaternion.Euler(-currentRecoil, 0, 0);
+
+        Camera.main.transform.rotation = currentRotation * recoilRotation;
+        currentRecoil += recoilStrength;
+        currentRecoil = Mathf.Clamp(currentRecoil, 0, maxRecoilAngle);
+    }
+    private void FireShotGun()
+    {
+        for (int i = 0; i < shotGunRayCount; i++)
+        {
+            RaycastHit hit;
+
+            Vector3 origin = Camera.main.transform.position;
+            Vector3 spreadDirection = GetSpreadDirection(Camera.main.transform.forward, shotGunSpreadAngle);
+
+            Debug.DrawRay(origin, spreadDirection * castDistance, Color.green, 0.6f);
+
+            if (Physics.Raycast(origin, spreadDirection, out hit, castDistance, TargetLayerMask))
+            {
+                Debug.Log("Hit");
+            }
+
+        }
+    }
+
+    private Vector3 GetSpreadDirection(Vector3 forwardDirection, float spreadAngle)
+    {
+        float spreadX = UnityEngine.Random.Range(-spreadAngle, spreadAngle);
+        float spreadY = UnityEngine.Random.Range(-spreadAngle, spreadAngle);
+        Vector3 spreadDirection = Quaternion.Euler(spreadX, spreadY, 0) * forwardDirection;
+        return spreadDirection;
+    }
+    private void PauseMenu()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            isPaused = !isPaused;
+            if (isPaused)
+            {
+                // true
+                Pause();
+            }
+            else
+            {
+                // false
+                Regame();
+            }
+        }
+    }
+    void Regame()
+    {
+        isPaused = false;
+        pauseObj.SetActive(isPaused);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        Time.timeScale = 1;
+    }
+
+    private void Pause()
+    {
+        pauseObj.SetActive(isPaused);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 0;
+    }
+    private void ActionFlashLight()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            SoundManager.Instance.PlaySfx("audioClipFlashLight", flashLight.transform.position);
+            isFlashLightOn = !isFlashLightOn;
+            flashLight.gameObject.SetActive(isFlashLightOn);
+        }
+    }
+
 
     void MouseSet()
     {
@@ -191,18 +344,23 @@ public class PlayerManager : MonoBehaviour
         // 무기 장착
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            audioSource.PlayOneShot(audioClipWeaponChange);
+            SoundManager.Instance.PlaySfx("audioClipWeaponChange", transform.position);
+            //audioSource.PlayOneShot(audioClipWeaponChange);
             animator.SetTrigger("IsWeaponChange");
             RifleM4Obj.SetActive(true);
             isUseWeapon = true;
+            bulletText.gameObject.SetActive(true);
+
         }
         // 무기 장착 해제
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            audioSource.PlayOneShot(audioClipWeaponChange);
+            SoundManager.Instance.PlaySfx("audioClipWeaponChange", transform.position);
+            //audioSource.PlayOneShot(audioClipWeaponChange);
             animator.SetTrigger("IsWeaponChange");
             RifleM4Obj.SetActive(false);
             isUseWeapon = false;
+            bulletText.gameObject.SetActive(false);
         }
     }
     void Run()
@@ -223,7 +381,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (IsAim)
+            if (IsAim && BulletCount())
             {
                 weaponMaxDistance = 200.0f;
                 IsFire = true;
@@ -243,12 +401,14 @@ public class PlayerManager : MonoBehaviour
                 {
                     Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 0.6f);
                 }
-                audioSource.PlayOneShot(audioClipFire);
-                gunFireEffect.Play();
+                SoundManager.Instance.PlaySfx("audioClipFire", gunFireEffect.transform.position);
+                //audioSource.PlayOneShot(audioClipFire);
+                ParticleManager.GetInstance().ParticlePlay(ParticleType.Fire, gunFireEffect.transform.position); 
+                //gunFireEffect.Play();
                 //StartCoroutine(SetFireDelay(false));
             }
         }
-        if (Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(0))
         {
             if (IsAim)
             {
@@ -263,7 +423,43 @@ public class PlayerManager : MonoBehaviour
             //animator.SetBool("IsFire", IsFire);
         }
     }
-    
+
+    private bool BulletCount()
+    {
+        if (fireBulletCount <= 0)
+        {
+            // 탄창에 총알이 없으면 못쏜다.
+            // 사운드 효과 추가하기
+            return false;
+        }
+        fireBulletCount--;
+        SetAmmorText();
+        return true;
+    }
+
+    private void SetAmmorText()
+    {        
+        bulletText.text = fireBulletCount.ToString() + " / " + saveBulletCount.ToString();
+    }
+    private void FillAmmor()
+    {
+        if (Input.GetKeyDown(KeyCode.R) && saveBulletCount > 0)
+        {
+            // 저장된 총알 수가 한 탄창보다 많니?
+            if (saveBulletCount >= maxBulletMagazine)
+            {
+                saveBulletCount -= maxBulletMagazine;
+                fireBulletCount = maxBulletMagazine;
+            }
+            // 저장된 총알 수가 한 탄창보다 적으면
+            else
+            {
+                fireBulletCount = saveBulletCount;
+                saveBulletCount = 0;
+            }
+            SetAmmorText();
+        }
+    }
     IEnumerator SetFireDelay(bool v)
     {
         yield return new WaitForSeconds(rifleFireDelay);
@@ -326,7 +522,7 @@ public class PlayerManager : MonoBehaviour
     {
         while (true)
         {
-            if (IsFire && IsRapidFire)
+            if (IsFire && IsRapidFire && BulletCount())
             {
                 Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
 
@@ -362,10 +558,14 @@ public class PlayerManager : MonoBehaviour
                             if ((TargetLayerMask & (1 << hitObject.layer)) != 0)
                             {
                                 Debug.Log("OnHit1 called");
-                                ParticleSystem particle = Instantiate(AttackParticle, hit1.point, Quaternion.identity);
-                                AttackParticle.Play();
-                                audioSource.PlayOneShot(audioClipHit);
-                                hitObject.GetComponent<HPController>().OnHit();
+                                ParticleManager.GetInstance().ParticlePlay(ParticleType.Explosion, hit1.point);
+                                //ParticleSystem particle = Instantiate(AttackParticle, hit1.point, Quaternion.identity);
+                                //AttackParticle.Play();
+                                SoundManager.Instance.PlaySfx("audioClipFire", gunFireEffect.transform.position);
+                                if (hitObject.TryGetComponent(out HPController hpController))
+                                {
+                                    hpController.OnHit();
+                                }
                             }
                         }
                         cnt++;
@@ -376,9 +576,9 @@ public class PlayerManager : MonoBehaviour
                 {
                     Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 0.6f);
                 }
-                audioSource.Stop();
+                SoundManager.Instance.StopSFX();
                 animator.SetTrigger("Fire");
-                audioSource.PlayOneShot(audioClipRapidFire);
+                SoundManager.Instance.PlaySfx("audioClipFire", gunFireEffect.transform.position);
                 yield return new WaitForSeconds(0.1f);
             }
             yield return null;
@@ -481,7 +681,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (audioClipWeaponChange != null)
         {
-            audioSource.PlayOneShot(audioClipWeaponChange);
+            SoundManager.Instance.PlaySfx("audioClipWeaponChange", transform.position);
         }
     }
 
@@ -497,15 +697,10 @@ public class PlayerManager : MonoBehaviour
     {
         // 집에 가라
         //StartCoroutine(PlayResetAudio());
-        audioSource.PlayOneShot(resetAudio);
+        SoundManager.Instance.PlaySfx("resetAudio", transform.position);
         characterController.Move(startPosition - transform.position);
         //transform.position = startPosition;
         transform.rotation = startRotation;
-    }
-    IEnumerator PlayResetAudio()
-    {
-        audioSource.PlayOneShot(resetAudio);
-        yield return null;
     }
 
     /// <summary>
@@ -535,16 +730,29 @@ public class PlayerManager : MonoBehaviour
             string name;
             foreach(RaycastHit hit in hits)
             {
-                name = hit.collider.name;
-                if (itemList.Contains(name))
+                if (hit.collider.gameObject.tag == "Bullet")
+                {// 총알 특수 처리
+                    saveBulletCount += hit.collider.gameObject.GetComponent<BulletCount>().bulletCount;
+                    SetAmmorText();
+                }
+                else if (hit.collider.gameObject.layer == 8)
                 {
-                    Debug.Log("이미 인벤토리에 있음 한개만 가지고 다니센");
+                    Debug.Log("플레이어 호출");
+                    //hit.collider.gameObject.GetComponent<DoorCollisionController>().ForceDoorRotate();
                 }
                 else
-                {
-                    itemList.Add(name);
-                    hit.collider.gameObject.SetActive(false);
-                    isGetWeaponItem = true;
+                {// 탄창
+                    name = hit.collider.name;
+                    if (itemList.Contains(name))
+                    {
+                        Debug.Log("이미 인벤토리에 있음 한개만 가지고 다니센");
+                    }
+                    else
+                    {
+                        itemList.Add(name);
+                        hit.collider.gameObject.SetActive(false);
+                        isGetWeaponItem = true;
+                    }
                 }
                 Debug.Log("Item : " + hit.collider.name);
             }
@@ -582,5 +790,16 @@ public class PlayerManager : MonoBehaviour
         Debug.DrawLine(corners[0], corners[1], Color.green, 3f);
         Debug.DrawLine(corners[0], corners[1], Color.green, 3f);
         Debug.DrawLine(corners[0], corners[1], Color.green, 3f);
+    }
+
+    
+    public void Exit()
+    {
+        Debug.Log("Exit 눌림");
+    }
+
+    public void Return()
+    {
+        Regame();
     }
 }

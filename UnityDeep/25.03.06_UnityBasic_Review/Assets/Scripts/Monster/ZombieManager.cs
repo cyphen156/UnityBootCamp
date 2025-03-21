@@ -3,7 +3,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
-using static ZombieManager;
+using UnityEngine.AI;
 
 public class ZombieManager : MonoBehaviour
 {
@@ -67,11 +67,11 @@ public class ZombieManager : MonoBehaviour
     Animator animator;
     public float rotationSpeed = 90f; // 회전 속도 (도/초)
     private Coroutine stateRoutine; // 코루틴 상태 저장용
-
+    public GameObject handRight;
     private bool hasTurnedEnough = false;
     GameObject playerObject;
-   
 
+    private NavMeshAgent agent;
     void Start()
     {
         currentState = EZombieState.Idle;
@@ -161,6 +161,7 @@ public class ZombieManager : MonoBehaviour
     {
         switch (currentState)
         {
+            //default:
             case EZombieState.Patrol:
                 //stateRoutine = StartCoroutine(Patrol());
                 Patrol();
@@ -245,9 +246,17 @@ public class ZombieManager : MonoBehaviour
     void Attack()
     {
         Debug.Log("공격");
+        //ActiveHand();
         animator.SetTrigger("Attack");
     }
-
+    public void ActiveHand()
+    {
+        handRight.gameObject.SetActive(true);
+    }
+    public void DeActiveHand()
+    {
+        handRight.gameObject.SetActive(false);
+    }
     void GoBack()
     {
         Debug.Log("집에 가자");

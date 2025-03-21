@@ -39,3 +39,9 @@ https://kenney.nl/assets/crosshair-pack
 
 13. Urban Night Sky                     :
 https://assetstore.unity.com/packages/2d/textures-materials/sky/urban-night-sky-134468
+
+Unity Provided Asset
+14. TextMesh Pro                        
+
+15. Door Free Pack Aferar               :   
+https://assetstore.unity.com/packages/3d/props/interior/door-free-pack-aferar-148411

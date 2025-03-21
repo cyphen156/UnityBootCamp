@@ -78,6 +78,19 @@ Unity6 Deep
 #1 Lecture
 부위별 데미지에 대한 아이디어
 
+#2 Lecture
+탄창 시스템
+손전등 구현하기
+
+#3 AI Navigation
+메시 기준으로 몬스터 AI의 행동을 제어가 가능하다
+Ground - NavMesh Surface 
+
+Monster - NavMesh Agent
+
+using UnityEngine.AI;
+
+
 25.03.20
 Unity6 Deep
 #1 Lecture
@@ -87,5 +100,7 @@ Unity6 Deep
 25.03.21
 Unity6 Deep
 #1 Lecture
+총기반동 개발
 
+슈퍼히트 전지아 강사님
 
