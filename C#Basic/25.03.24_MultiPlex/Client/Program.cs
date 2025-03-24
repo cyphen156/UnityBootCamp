@@ -16,7 +16,6 @@ namespace Client
 {
     class Program
     {
-
         //[][]
         struct Packet
         {
