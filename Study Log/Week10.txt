@@ -81,8 +81,23 @@ C# list ThreadSafe
 25.03.25
 C# Basic
 #1 Lecture
+유니테스크는 멀티 스레드를 위한 함수가 아니고 비동기화와 코루틴 비동기 대체를 위해 만든것이다.
+코루틴이 내 할거 하고 다른거 처리하라고 양보하는거라고 한다면 
+유니테스크는 말 그대로 비동기 내 할일이 다 끝나면 알려줘서 다음 작업을 할 수 있도록 허용하는것것
 
+#2 Lecture
+DBMS
+스케일 업 / 아웃        :       컴퓨터 사양을 올린다 / DB를 하나 더 산다
+show databases;
+use mysql
+where like "%Korea" / "Korea%"
+sql 테이블에서 varchar or char 의 차이는
+빈 공간 공백을 채우느냐 안채우고 사이즈 다운하느냐
 
+주의해야 하는 쿼리문 Update, delete, set
+
+마지막 팁 유니티에서 스레드 쓸때 게임오브젝트 쓰지마라
+리스트 미리 뽑아놓고 거기에서 찾아라
 25.03.26
 Unity6 Deep
 #1 Lecture

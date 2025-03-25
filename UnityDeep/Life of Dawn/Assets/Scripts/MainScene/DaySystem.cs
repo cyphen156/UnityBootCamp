@@ -1,32 +1,33 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 
 /// <summary>
-/// Å¸ÀÓ ºê·ÎµåÄ³½ºÆ® ÀÌº¥ÅÍ
+/// íƒ€ì„ ë¸Œë¡œë“œìºìŠ¤íŠ¸ ì´ë²¤í„°
 /// </summary>
 public class DaySystem : MonoBehaviour
 {
     public float timeSpeed;
     public float baseTime;
     public float setTime;
-    public float weight;    // °¡ÁßÄ¡
+    public float weight;    // ê°€ì¤‘ì¹˜
 
     public float currentTime;
     public bool isDay;
 
+    public GameObject sun;
+
     public event Action<bool, float> OnDayNightChanged;
-    DirectionalLight dl;
     private void Awake()
     {
-        timeSpeed = 0.05f;
-        baseTime = 120f; // 2ºĞ
+        currentTime = 0f;
+        timeSpeed = 0.1f;
+        baseTime = 60f; // 1ë¶„
         weight = 1.5f;
         isDay = true;
         setTime = baseTime;
-        dl = GetComponent<DirectionalLight>();
     }
 
     private void Start()
@@ -38,27 +39,20 @@ public class DaySystem : MonoBehaviour
     {
         while (true)
         {
-            float addTime = Time.deltaTime;
-            // ¹ã¿¡´Â ½Ã°£ÀÌ ´Ê°Ô¿È
-            if (isDay)
-            {
-                setTime = baseTime;
-            }
-            else
-            { 
-                setTime = baseTime * weight;
-            }
-            currentTime += addTime;
-            
+            currentTime += timeSpeed;
+
+            sun.transform.Rotate(new Vector3(0f, 360f / setTime * timeSpeed, 0f));
+
             if (currentTime >= setTime)
             {
                 isDay = !isDay;
-                currentTime = 0;
-                OnDayNightChanged?.Invoke(isDay, weight);
-                Debug.Log($"[DaySystem] {(isDay ? "³·" : "¹ã")}À¸·Î ÀüÈ¯µÊ");
-            }
+                currentTime = 0f;
 
-            // ½Ã°£°è´Â ´Ù¸¥ »óÅÂ¿Í »ó°ü ¾øÀÌ Ç×»ó ÀÏÁ¤ÇÏ°Ô Èê·¯¾ß ÇÑ´Ù.
+                setTime = isDay ? baseTime : baseTime * weight;
+
+                OnDayNightChanged?.Invoke(isDay, weight);
+                Debug.Log($"[DaySystem] {(isDay ? "ë‚®" : "ë°¤")}ìœ¼ë¡œ ì „í™˜ë¨");
+            }
             yield return new WaitForSeconds(timeSpeed);
         }
     }
