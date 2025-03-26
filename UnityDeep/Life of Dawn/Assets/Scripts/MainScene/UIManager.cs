@@ -8,15 +8,22 @@ public class UIManager : MonoBehaviour
     public float playerHP;
 
     public List<Image> HPUIs;
+    public GameObject UIBackground;
+    public List<Image> UIBackgrounds;
     private int DamageLevel;
 
-    public GameObject UIBackground;
 
     private void Awake()
     {
         playerHP = 100f;
         DamageLevel = 0;
         foreach (Image img in HPUIs)
+        {
+            Color c = img.color;
+            c.a = 0f;
+            img.color = c;
+        }
+        foreach (Image img in UIBackgrounds)
         {
             Color c = img.color;
             c.a = 0f;
@@ -50,17 +57,16 @@ public class UIManager : MonoBehaviour
     IEnumerator SetHPUI(float duration)
     {
         float currentTime = 0f;
-
-        // 목표 Vignette 알파 
         float vignetteTargetAlpha = 0.2f * Mathf.Clamp(DamageLevel, 0, 4);
         float vignetteStartAlpha = HPUIs[0].color.a;
 
-        // 시작 알파 저장
         float[] startAlphas = new float[HPUIs.Count];
         for (int i = 0; i < HPUIs.Count; i++)
-        {
             startAlphas[i] = HPUIs[i].color.a;
-        }
+
+        float[] bgStartAlphas = new float[UIBackgrounds.Count];
+        for (int i = 0; i < UIBackgrounds.Count; i++)
+            bgStartAlphas[i] = UIBackgrounds[i].color.a;
 
         while (currentTime < duration)
         {
@@ -70,58 +76,39 @@ public class UIManager : MonoBehaviour
             for (int i = 0; i < HPUIs.Count; i++)
             {
                 float target = 0f;
-
                 if (i == 0)
-                {
                     target = vignetteTargetAlpha;
-                }
-                else
-                {
-                    if (i <= DamageLevel)
-                    {
-                        target = 1f;
-                    }
-                }
+                else if (i <= DamageLevel)
+                    target = 1f;
 
-                float newAlpha = Mathf.Lerp(startAlphas[i], target, t);
                 Color c = HPUIs[i].color;
-                c.a = newAlpha;
+                c.a = Mathf.Lerp(startAlphas[i], target, t);
                 HPUIs[i].color = c;
             }
+
+            // 백그라운드는 최대 2단계까지 사용
+            for (int i = 0; i < UIBackgrounds.Count && i < 2; i++)
+            {
+                float target = (DamageLevel >= i + 1) ? (0.3f + i * 0.2f) : 0f; // 예: 1단계=0.3, 2단계=0.5
+                Color c = UIBackgrounds[i].color;
+                c.a = Mathf.Lerp(bgStartAlphas[i], target, t);
+                UIBackgrounds[i].color = c;
+            }
+
             yield return null;
         }
-
-        // 마지막 보정
-        for (int i = 0; i < HPUIs.Count; i++)
-        {
-            float target = 0f;
-
-            if (i == 0)
-            {
-                target = vignetteTargetAlpha;
-            }
-            else
-            {
-                if (i <= DamageLevel)
-                {
-                    target = 1f;
-                }
-            }
-
-            Color c = HPUIs[i].color;
-            c.a = target;
-            HPUIs[i].color = c;
-        }
     }
+
     private void OnEnable()
     {
-        // 낮밤 이벤트 구독
-        FindObjectOfType<DaySystem>().OnDayNightChanged += HandleDayNightChanged;
+        if (DaySystem.Instance != null)
+            DaySystem.Instance.OnDayNightChanged += HandleDayNightChanged;
     }
 
     private void OnDisable()
     {
-        FindObjectOfType<DaySystem>().OnDayNightChanged -= HandleDayNightChanged;
+        if (DaySystem.Instance != null)
+            DaySystem.Instance.OnDayNightChanged -= HandleDayNightChanged;
     }
 
     private void HandleDayNightChanged(bool isDay, float weight)
