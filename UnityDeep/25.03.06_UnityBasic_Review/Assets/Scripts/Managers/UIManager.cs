@@ -31,10 +31,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        SetPlayerHP(playerHP);
-    }
+    //private void Update()
+    //{
+    //    SetPlayerHP(playerHP);
+    //}
     public void SetPlayerHP(float inPlayerHP)
     {
         playerHP = inPlayerHP;

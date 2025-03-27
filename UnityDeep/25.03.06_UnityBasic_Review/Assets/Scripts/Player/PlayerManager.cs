@@ -1,18 +1,11 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Transactions;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
 using static UnityEngine.Random;
 public class PlayerManager : MonoBehaviour
 {
@@ -41,6 +34,9 @@ public class PlayerManager : MonoBehaviour
     private float yaw = 0.0f; //좌우 회전 값
     private bool isFirstPerson = false; //1인칭 모드 여부
     private bool isRotaterAroundPlayer = false; //카메라가 플레이어 주위를 회전하는지 여부 
+
+    public float HP = 100f; // 플레이어 체력
+    public UIManager uiManager; // 에디터 연결 필요
 
     //중력 관련 변수
     public float gravity = -9.81f;
@@ -122,11 +118,24 @@ public class PlayerManager : MonoBehaviour
 
     public float damage;
 
-
+    private float maxHP = 100f;
+    private bool isDamaged = false;
+    private float CurrentEvadeTime = 0f;
+    private float RecoveryTime = 5f;
+    public GameObject HPUI;
+    public GameObject Backgrounds;
+    public GameObject deadScreen;
+    private void Awake()
+    {
+        if (uiManager == null)
+        {
+            uiManager = FindObjectOfType<UIManager>();
+        }
+    }
     void Start()
     {
         itemList = new HashSet<string>();
-        itemList.Add("assault1");
+        //itemList.Add("assault1");
         Cursor.lockState = CursorLockMode.Locked;
         currentDistance = thirdPersonDistance;
         targetDistance = thirdPersonDistance;
@@ -142,10 +151,22 @@ public class PlayerManager : MonoBehaviour
         crossHair.SetActive(false);
         pauseObj.SetActive(false);
         bulletText.gameObject.SetActive(false);
+        HPUI.SetActive(true);
+        Backgrounds.SetActive(false);
+        damage = 1.5f;
+        deadScreen.SetActive(false);
     }
 
     void Update()
     {
+        if (HP <= 0)
+        {
+            Debug.Log("플레이어 사망 처리");
+            Pause();
+            crossHair.SetActive(false);
+            Backgrounds.SetActive(false);
+            deadScreen.SetActive(true);
+        }
         PauseMenu();
         if (!isPaused)
         {
@@ -184,7 +205,7 @@ public class PlayerManager : MonoBehaviour
             WeaponChange();
 
             AnimationSet();
-
+            RecoveryHP();
             PickUp();
             Operate();
             FillAmmor();
@@ -740,10 +761,15 @@ public class PlayerManager : MonoBehaviour
                     saveBulletCount += hit.collider.gameObject.GetComponent<BulletCount>().bulletCount;
                     SetAmmorText();
                 }
-                else if (hit.collider.gameObject.layer == 8)
+                else if (hit.collider.gameObject.tag== "Door")
                 {
                     Debug.Log("플레이어 호출");
-                    //hit.collider.gameObject.GetComponent<DoorCollisionController>().ForceDoorRotate();
+                    DoorController door = hit.collider.gameObject.GetComponent<DoorController>();
+
+                    if (door.isOpen == false)
+                    {
+                        door.RotateDoor();
+                    }
                 }
                 else
                 {// 탄창
@@ -797,7 +823,21 @@ public class PlayerManager : MonoBehaviour
         Debug.DrawLine(corners[0], corners[1], Color.green, 3f);
     }
 
-    
+
+    public void TakeDamage(float damage)
+    {
+        HP -= damage;
+        HP = Mathf.Clamp(HP, 0, 100);
+
+        if (uiManager != null)
+        {
+            uiManager.SetPlayerHP(HP);
+        }
+        isDamaged = true;
+        CurrentEvadeTime = 0f;
+
+        
+    }
     public void Exit()
     {
         string sceneName = "TitleScene";
@@ -808,5 +848,40 @@ public class PlayerManager : MonoBehaviour
     public void Return()
     {
         Regame();
+    }
+
+    public void RecoveryHP()
+    {
+        // 풀피면 안맞았다는 소리
+        if (HP >= maxHP)
+        {
+            return;
+        }
+
+        // 풀피가 아니면 맞은지 얼마나 됬는지 확인
+        if (isDamaged)
+        {
+            CurrentEvadeTime += Time.deltaTime;
+            if (CurrentEvadeTime > RecoveryTime)
+            {
+                isDamaged = false;
+            }
+        }
+
+        // 조건에 안걸리면 안맞은지 오래됬음
+        else
+        {
+            // 프레임당 초당 5식 회복
+            HP += 5f * Time.deltaTime;
+            uiManager.SetPlayerHP(HP);
+        }
+    }
+
+    public void DeadButton()
+    {
+        Debug.Log("눌림");
+        string sceneName = "MainScene";
+
+        SceneManager.LoadScene(sceneName);
     }
 }

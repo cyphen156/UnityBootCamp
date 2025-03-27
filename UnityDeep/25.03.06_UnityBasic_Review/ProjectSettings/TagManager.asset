@@ -10,6 +10,7 @@ TagManager:
   - UIBackground
   - HPUI
   - Wall
+  - Door
   layers:
   - Default
   - TransparentFX

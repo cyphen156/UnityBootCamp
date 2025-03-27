@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SystemUIManager : MonoBehaviour
 {
     private static SystemUIManager instance;
-    Scene scene;
     private void Awake()
     {
         if (instance == null)
@@ -17,6 +17,11 @@ public class SystemUIManager : MonoBehaviour
             Destroy(gameObject); // 기존 인스턴스가 있으면 새로 생성하지 않음
             return;
         }
+    }
+    
+    private void Update()
+    {
+        
     }
 
     private void OnEnable()
@@ -49,10 +54,9 @@ public class SystemUIManager : MonoBehaviour
     public void StartButton()
     {
         LoadScene("tutorialScene");
-
     }
     public void ExitButton()
     {
-        
+        Application.Quit();
     }
 }

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.siccity.gltfutility": "file:C:/Users/dbdxo/OneDrive/바탕 화면/GLTFUtility-master",
     "com.unity.ai.navigation": "2.0.6",
     "com.unity.animation.rigging": "1.3.0",
     "com.unity.collab-proxy": "2.7.1",
