@@ -1,0 +1,58 @@
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class SystemUIManager : MonoBehaviour
+{
+    private static SystemUIManager instance;
+    Scene scene;
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject); // 기존 인스턴스가 있으면 새로 생성하지 않음
+            return;
+        }
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded; // 중복 제거
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded; // 이벤트 해제
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log($"씬 로드 완료: {scene.name}");
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayBGM(scene.name, 1.0f);
+            Debug.Log($"BGM 재생: {scene.name}");
+        }
+    }
+    public void LoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+        Debug.Log("씬 변경 :: " + sceneName);
+    }
+    
+    public void StartButton()
+    {
+        LoadScene("tutorialScene");
+
+    }
+    public void ExitButton()
+    {
+        
+    }
+}

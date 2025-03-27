@@ -10,6 +10,7 @@ using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 using static UnityEngine.Random;
@@ -118,6 +119,8 @@ public class PlayerManager : MonoBehaviour
     private float shakeMagnitude = 0.1f;
     private Vector3 originalCameraPosition;
     private Coroutine cameraShakeCoroutine;
+
+    public float damage;
 
 
     void Start()
@@ -564,7 +567,9 @@ public class PlayerManager : MonoBehaviour
                                 SoundManager.Instance.PlaySfx("audioClipFire", gunFireEffect.transform.position);
                                 if (hitObject.TryGetComponent(out HPController hpController))
                                 {
-                                    hpController.OnHit();
+                                    Vector3 shootDirection = ray.direction;
+                                    Quaternion rotation = Quaternion.LookRotation(shootDirection);
+                                    hpController.OnHit(damage, rotation);
                                 }
                             }
                         }
@@ -795,7 +800,9 @@ public class PlayerManager : MonoBehaviour
     
     public void Exit()
     {
+        string sceneName = "TitleScene";
         Debug.Log("Exit ´­¸²");
+        SceneManager.LoadScene(sceneName);
     }
 
     public void Return()

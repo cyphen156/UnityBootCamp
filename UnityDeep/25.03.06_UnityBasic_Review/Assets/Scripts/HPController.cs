@@ -17,11 +17,11 @@ public class HPController : MonoBehaviour
     {
     }
 
-    public void OnHit()
+    public void OnHit(Quaternion quaternion)
     {
         Debug.Log("OnHit called");
         HP--;
-        Instantiate(hitEffect, transform.position, Quaternion.identity);
+        Instantiate(hitEffect, transform.position, quaternion);
     }
 
     private void OnCollisionEnter(Collision collision)

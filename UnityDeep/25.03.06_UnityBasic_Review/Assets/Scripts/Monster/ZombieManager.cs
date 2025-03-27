@@ -18,15 +18,15 @@ public class ZombieManager : MonoBehaviour
     /// </summary>
     public enum  EZombieState
     {
-        Patrol,
-        Chase,
-        Attack,
-        Evade,
-        Damage,
-        Die,
-        Goback,
+        Patrol,     // 순찰
+        Chase,      // 추적
+        Attack,     // 공격
+        Evade,      // 이런거 없음
+        Damage,     // OnHit
+        Die,        // 사망
+        Goback,     // 놓치면
 
-        Idle
+        Idle        // 가만히 서있기
     }
 
     // 이거 필요할까??
@@ -46,6 +46,7 @@ public class ZombieManager : MonoBehaviour
     }
     public EZombieState currentState = EZombieState.Idle;
     
+
     public float HP = 10f;
     public float currentTime = 0f;
     public GameObject hitEffect;
@@ -70,6 +71,7 @@ public class ZombieManager : MonoBehaviour
     public GameObject handRight;
     private bool hasTurnedEnough = false;
     GameObject playerObject;
+    public float zombieFov;
 
     private NavMeshAgent agent;
     void Start()
