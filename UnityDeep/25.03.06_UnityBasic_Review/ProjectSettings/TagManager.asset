@@ -11,6 +11,9 @@ TagManager:
   - HPUI
   - Wall
   - Door
+  - Zombie
+  - QuestManager
+  - PatrolPoint
   layers:
   - Default
   - TransparentFX

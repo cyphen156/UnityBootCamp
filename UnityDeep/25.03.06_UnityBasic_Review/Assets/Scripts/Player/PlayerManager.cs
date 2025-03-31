@@ -60,12 +60,10 @@ public class PlayerManager : MonoBehaviour
 
     private int animationSpeed = 1;
     private string currentAnimation;
-    public AudioClip audioClipFire;
-    public AudioClip audioClipRapidFire;
-
     private AudioSource audioSource;
-    public AudioClip audioClipWalk;
-    public AudioClip audioClipWeaponChange;
+    public AudioClip FireSound;
+    public AudioClip Step;
+    public AudioClip Reolad;
     public AudioClip resetAudio;
     public GameObject RifleM4Obj;
 
@@ -88,12 +86,12 @@ public class PlayerManager : MonoBehaviour
     public Transform EffectPos;
     public ParticleSystem gunFireEffect;    // m4Effect
     public ParticleSystem AttackParticle;    
-    public AudioClip audioClipHit;
+    public AudioClip Hit;
 
     private float rifleFireDelay = 0.5f;
     public GameObject flashLight;
     public bool isFlashLightOn = false;
-    public AudioClip audioClipFlashLight;
+    public AudioClip FlashLight;
     /// <summary>
     ///  UIControll
     /// </summary>
@@ -125,6 +123,7 @@ public class PlayerManager : MonoBehaviour
     public GameObject HPUI;
     public GameObject Backgrounds;
     public GameObject deadScreen;
+    public bool canPlayWalkSound = true;
     private void Awake()
     {
         if (uiManager == null)
@@ -135,7 +134,7 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         itemList = new HashSet<string>();
-        //itemList.Add("assault1");
+        itemList.Add("assault1");
         Cursor.lockState = CursorLockMode.Locked;
         currentDistance = thirdPersonDistance;
         targetDistance = thirdPersonDistance;
@@ -210,7 +209,10 @@ public class PlayerManager : MonoBehaviour
             Operate();
             FillAmmor();
             ActionFlashLight();
-
+            if (IsRunning && canPlayWalkSound)
+            {
+                StartCoroutine(PlayWalkSound());
+            }
         }
         //DubugBox();
     }
@@ -314,7 +316,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            SoundManager.Instance.PlaySfx("audioClipFlashLight", flashLight.transform.position);
+            SoundManager.Instance.PlaySfx("FlashLight", flashLight.transform.position);
             isFlashLightOn = !isFlashLightOn;
             flashLight.gameObject.SetActive(isFlashLightOn);
         }
@@ -368,7 +370,7 @@ public class PlayerManager : MonoBehaviour
         // 무기 장착
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            SoundManager.Instance.PlaySfx("audioClipWeaponChange", transform.position);
+            SoundManager.Instance.PlaySfx("WeaponChange", transform.position);
             //audioSource.PlayOneShot(audioClipWeaponChange);
             animator.SetTrigger("IsWeaponChange");
             RifleM4Obj.SetActive(true);
@@ -379,7 +381,7 @@ public class PlayerManager : MonoBehaviour
         // 무기 장착 해제
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            SoundManager.Instance.PlaySfx("audioClipWeaponChange", transform.position);
+            SoundManager.Instance.PlaySfx("WeaponChange", transform.position);
             //audioSource.PlayOneShot(audioClipWeaponChange);
             animator.SetTrigger("IsWeaponChange");
             RifleM4Obj.SetActive(false);
@@ -401,6 +403,14 @@ public class PlayerManager : MonoBehaviour
         moveSpeed = IsRunning ? runSpeed : walkSpeed;
     }
 
+    IEnumerator PlayWalkSound()
+    {
+
+        canPlayWalkSound = false;
+        SoundManager.Instance.PlaySfx("Step1", transform.position);
+        yield return new WaitForSeconds(0.3f);
+        canPlayWalkSound = true;
+    }
     void WeaponFire()
     {
         if (Input.GetMouseButtonDown(0))
@@ -425,7 +435,7 @@ public class PlayerManager : MonoBehaviour
                 {
                     Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 0.6f);
                 }
-                SoundManager.Instance.PlaySfx("audioClipFire", gunFireEffect.transform.position);
+                SoundManager.Instance.PlaySfx("FireSound", transform.position);
                 //audioSource.PlayOneShot(audioClipFire);
                 ParticleManager.GetInstance().ParticlePlay(ParticleType.Fire, gunFireEffect.transform.position); 
                 //gunFireEffect.Play();
@@ -481,6 +491,7 @@ public class PlayerManager : MonoBehaviour
                 fireBulletCount = saveBulletCount;
                 saveBulletCount = 0;
             }
+            SoundManager.Instance.PlayReload(transform.position);
             SetAmmorText();
         }
     }
@@ -585,7 +596,7 @@ public class PlayerManager : MonoBehaviour
                                 ParticleManager.GetInstance().ParticlePlay(ParticleType.Explosion, hit1.point);
                                 //ParticleSystem particle = Instantiate(AttackParticle, hit1.point, Quaternion.identity);
                                 //AttackParticle.Play();
-                                SoundManager.Instance.PlaySfx("audioClipFire", gunFireEffect.transform.position);
+                                SoundManager.Instance.PlaySfx("FireSound", transform.position);
                                 if (hitObject.TryGetComponent(out HPController hpController))
                                 {
                                     Vector3 shootDirection = ray.direction;
@@ -604,7 +615,7 @@ public class PlayerManager : MonoBehaviour
                 }
                 SoundManager.Instance.StopSFX();
                 animator.SetTrigger("Fire");
-                SoundManager.Instance.PlaySfx("audioClipFire", gunFireEffect.transform.position);
+                SoundManager.Instance.PlaySfx("FireSound", transform.position);
                 yield return new WaitForSeconds(0.1f);
             }
             yield return null;
@@ -703,13 +714,13 @@ public class PlayerManager : MonoBehaviour
         mainCamera.fieldOfView = targetFov;
     }
 
-    void PlayWeaponChangeSound()
-    {
-        if (audioClipWeaponChange != null)
-        {
-            SoundManager.Instance.PlaySfx("audioClipWeaponChange", transform.position);
-        }
-    }
+    //void PlayWeaponChangeSound()
+    //{
+    //    if (WeaponChange != null)
+    //    {
+    //        SoundManager.Instance.PlaySfx("WeaponChange", transform.position);
+    //    }
+    //}
 
     void PickUp()
     {
@@ -723,7 +734,7 @@ public class PlayerManager : MonoBehaviour
     {
         // 집에 가라
         //StartCoroutine(PlayResetAudio());
-        SoundManager.Instance.PlaySfx("resetAudio", transform.position);
+        //SoundManager.Instance.PlaySfx("resetAudio", transform.position);
         characterController.Move(startPosition - transform.position);
         //transform.position = startPosition;
         transform.rotation = startRotation;
@@ -759,6 +770,7 @@ public class PlayerManager : MonoBehaviour
                 if (hit.collider.gameObject.tag == "Bullet")
                 {// 총알 특수 처리
                     saveBulletCount += hit.collider.gameObject.GetComponent<BulletCount>().bulletCount;
+                    SoundManager.Instance.PlaySfx("GetAmmo", transform.position);
                     SetAmmorText();
                 }
                 else if (hit.collider.gameObject.tag== "Door")
@@ -835,7 +847,7 @@ public class PlayerManager : MonoBehaviour
         }
         isDamaged = true;
         CurrentEvadeTime = 0f;
-
+        SoundManager.Instance.PlaySfx("Hit", transform.position);
         
     }
     public void Exit()

@@ -13547,7 +13547,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2.6000001
-        value: -0.0013621146
+        value: -0.0013621112
         inSlope: -0.013165103
         outSlope: -0.013165103
         tangentMode: 0
@@ -52541,7 +52541,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2.6000001
-        value: -0.0013621146
+        value: -0.0013621112
         inSlope: -0.013165103
         outSlope: -0.013165103
         tangentMode: 0
@@ -76818,6 +76818,13 @@ AnimationClip:
     messageOptions: 0
   - time: 2.6
     functionName: DeActiveHand
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 2.6
+    functionName: EndAttack
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

@@ -57,13 +57,13 @@ public class NavMeshExample : MonoBehaviour
     private float nextAttackTime = 0.0f;
     public Transform[] patrolPoints;    // 순찰 포인트
     private int currentPatrolPoints;  // 현재 패트롤 인덱스
-    public float moveSpeed = 2.0f;
-    public float trackingRange = 10.0f;
+    public float moveSpeed = 4.0f;
+    public float trackingRange = 20.0f;
     private bool isAttack = false;
     private float evadeRange = 5.0f;
     private float distanceToTarget;
     private bool isWaiting = true;
-    public float idleTime = 2.0f;
+    public float idleTime = 20.0f;
     public bool isPlayingAnimation = false;
     ZombieAnimation currentAnimation;
     Animator animator;
@@ -81,6 +81,11 @@ public class NavMeshExample : MonoBehaviour
     public float jumpHeight = 10.0f;
     public float jumpDuration = 1.0f;
     private NavMeshLink[] navMeshLinks;
+    private float baseMoveSpeed;
+    private float baseTrackingRange;
+    private float maxHP;
+    private bool isSubscribed;
+
     void Start()
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;
@@ -89,14 +94,51 @@ public class NavMeshExample : MonoBehaviour
         currentAnimation = ZombieAnimation.ZombieIdle;
         playerObject = GameObject.FindGameObjectWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
-        // 최초 한번 할때만 사용해라 그마저도 사용 추천안한다.
         rb = GetComponent<Rigidbody>();
         navMeshLinks = FindObjectsOfType<NavMeshLink>();
+
+        baseMoveSpeed = moveSpeed;
+        baseTrackingRange = trackingRange;
+        maxHP = HP;
+        GameObject[] patrolObjects = GameObject.FindGameObjectsWithTag("PatrolPoint");
+        patrolPoints = new Transform[patrolObjects.Length];
+        for (int i = 0; i < patrolObjects.Length; i++)
+        {
+            patrolPoints[i] = patrolObjects[i].transform;
+        }
+        if (DaySystem.Instance != null && !isSubscribed)
+        {
+            DaySystem.Instance.OnDayNightChanged += OnDayNightChanged;
+            isSubscribed = true;
+        }
+    }
+    private void OnDayNightChanged(bool isDay, float weight)
+    {
+        if (!isDay)
+        {
+            moveSpeed = baseMoveSpeed * weight;
+            trackingRange = baseTrackingRange * weight;
+
+            if (currentState == EZombieState.Die)
+            {
+                HP = maxHP * weight;
+                animator.ResetTrigger("Die");
+                animator.Play("ZombieIdle");
+                currentState = EZombieState.Chase;
+                Physics.IgnoreCollision(GetComponent<Collider>(), playerObject.GetComponent<Collider>(), false);
+                Physics.IgnoreLayerCollision(gameObject.layer, gameObject.layer, false);
+            }
+        }
+        else
+        {
+            moveSpeed = baseMoveSpeed;
+            trackingRange = baseTrackingRange;
+        }
     }
 
     void Update()
     {
-        
+
         currentTime += Time.deltaTime;
 
         if (HP <= 0)
@@ -171,7 +213,10 @@ public class NavMeshExample : MonoBehaviour
         //AIBehaviorControl();
     }
 
-
+    public void TakeDamage(float damage)
+    {
+        HP -= damage;
+    }
     void AIBehaviorControl()
     {
         switch (currentState)
@@ -194,16 +239,16 @@ public class NavMeshExample : MonoBehaviour
                 break;
             case EZombieState.Attack:
                 //stateRoutine = StartCoroutine(Patrol());
-                //Attack();
+                Attack();
                 break;
 
             case EZombieState.Goback:
-                //GoBack();
+                GoBack();
                 break;
 
             default:    //  EzZombieState.Idle
                 //stateRoutine = StartCoroutine(Patrol());
-                Idle();
+                //Idle();
                 break;
         }
     }
@@ -231,14 +276,14 @@ public class NavMeshExample : MonoBehaviour
     {
         if (patrolPoints.Length > 0)
         {
-            Debug.Log("순찰");
+            //Debug.Log("순찰");
             Transform targetPoint = patrolPoints[currentPatrolPoints];
         }
     }
 
     void Chase(Transform target)
     {
-        Debug.Log("추적");
+        //Debug.Log("추적");
         Vector3 direction = (target.position - transform.position).normalized;
         //transform.position += direction * moveSpeed * Time.deltaTime;
         agent.speed = moveSpeed;
@@ -253,12 +298,12 @@ public class NavMeshExample : MonoBehaviour
 
     void Evade()
     {
-        Debug.Log("회피");
+        //Debug.Log("회피");
     }
 
     void Die()
     {
-        Debug.Log("쥬그무ㅜ");
+        //Debug.Log("쥬그무ㅜ");
         animator.SetTrigger("Die");
         // 플레이어 그룹과의 충돌 무시
         Physics.IgnoreCollision(gameObject.GetComponent<Collider>(), playerObject.GetComponent<Collider>(), true);
@@ -267,13 +312,35 @@ public class NavMeshExample : MonoBehaviour
     }
     void Attack()
     {
-        Debug.Log("공격");
+        if (isAttack)
+        {
+            return; 
+        }
+
+        isAttack = true;
         animator.SetTrigger("Attack");
+        StartCoroutine(AttackCooldown());
+    }
+
+    public void EndAttack()
+    {
+        isAttack = false;
+    }
+
+    private IEnumerator AttackCooldown()
+    {
+        yield return new WaitForSeconds(attackDelay); // 예: 2.0초
+        isAttack = false;
     }
 
     void GoBack()
     {
-        Debug.Log("집에 가자");
+        //Debug.Log("집에 가자");
+        if (patrolPoints == null || patrolPoints.Length == 0)
+        {
+            currentState = EZombieState.Die;
+            return;
+        }
         Vector3 direction = (patrolPoints[currentPatrolPoints].position - transform.position).normalized;
 
         // 목표 지점과 현재 위치 사이의 거리 계산
@@ -290,7 +357,7 @@ public class NavMeshExample : MonoBehaviour
     }
     void Idle()
     {
-        Debug.Log("Default");
+        //Debug.Log("Default");
 
         // 이상 상태일 경우 일정 시간이 지나면 추적을 시작함
         if (currentTime >= idleTime)
@@ -305,27 +372,27 @@ public class NavMeshExample : MonoBehaviour
     //    isAttack = false;
     //}
 
-    private void OnCollisionEnter(Collision collision)
-    {
+    //private void OnCollisionEnter(Collision collision)
+    //{
 
-    }
+    //}
 
-    private void OnTriggerEnter(Collider other)
-    {
-        //other.GetComponent<MeshRenderer>().material.color = Color.red;
-        if (other.gameObject.CompareTag("Player"))
-        {
-            Debug.Log("플레이어랑 충돌함");
-            GameObject player = other.gameObject;
-            if (player)
-            {
-                //playerManager.Weapon
-            }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    //other.GetComponent<MeshRenderer>().material.color = Color.red;
+    //    if (other.gameObject.CompareTag("Player"))
+    //    {
+    //        Debug.Log("플레이어랑 충돌함");
+    //        GameObject player = other.gameObject;
+    //        if (player)
+    //        {
+    //            //playerManager.Weapon
+    //        }
 
-            // 처음으로 돌아가라
-            player.GetComponent<PlayerManager>().ResetSequence();
-        }
-    }
+    //        // 처음으로 돌아가라
+    //        player.GetComponent<PlayerManager>().ResetSequence();
+    //    }
+    //}
     private IEnumerator JumpAcrossLink()
     {
         Debug.Log("점프 시작");

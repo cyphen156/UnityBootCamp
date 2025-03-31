@@ -26,7 +26,7 @@ public class ParticleManager : MonoBehaviour
     public GameObject weaponFireParticle;
     public GameObject weaponSmokeParticle;
 
-    public int poolSize = 30;
+    public int poolSize = 50;
 
     public static ParticleManager GetInstance ()
     {
@@ -66,6 +66,18 @@ public class ParticleManager : MonoBehaviour
 
     public bool ParticlePlay(ParticleType particleType, Vector3 position)
     {
+        if (!dicParticleSystem.ContainsKey(particleType))
+        {
+            Debug.LogWarning($"등록되지 않은 파티클 타입: {particleType}");
+            return false;
+        }
+
+        if (!particlePools.ContainsKey(particleType) || particlePools[particleType].Count == 0)
+        {
+            Debug.LogWarning($"{particleType} 파티클 풀에 남은 오브젝트가 없습니다.");
+            return false;
+        }
+
         if (dicParticleSystem.ContainsKey(particleType))
         {
             GameObject particleObj = particlePools[particleType].Dequeue();

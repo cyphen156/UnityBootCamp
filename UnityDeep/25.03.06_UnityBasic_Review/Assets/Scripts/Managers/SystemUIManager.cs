@@ -1,10 +1,11 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SystemUIManager : MonoBehaviour
 {
-    private static SystemUIManager instance;
+    public static SystemUIManager instance;
     private void Awake()
     {
         if (instance == null)
@@ -53,10 +54,22 @@ public class SystemUIManager : MonoBehaviour
     
     public void StartButton()
     {
-        LoadScene("tutorialScene");
+        StartCoroutine(ButtonClicked("tutorialScene"));
     }
     public void ExitButton()
     {
+        StartCoroutine(ButtonClicked());
         Application.Quit();
+    }
+    IEnumerator ButtonClicked()
+    {
+        SoundManager.Instance.PlaySfx("ButtonClick", transform.position);
+        yield return new WaitForSeconds(2.5f);
+    }
+    IEnumerator ButtonClicked(string sceneName)
+    {
+        SoundManager.Instance.PlaySfx("ButtonClick", transform.position);
+        yield return new WaitForSeconds(2.5f);
+        LoadScene(sceneName);
     }
 }

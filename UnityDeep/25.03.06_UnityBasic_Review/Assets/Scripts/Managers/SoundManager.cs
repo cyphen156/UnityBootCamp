@@ -10,6 +10,7 @@ public class SoundManager : MonoBehaviour
 
     public AudioSource bgmSource;
     public AudioSource sfxSource;
+    public AudioSource reloadSource;
 
     private Dictionary<string, AudioClip> bgmClips = new Dictionary<string, AudioClip>();
     private Dictionary<string, AudioClip> sfxClips = new Dictionary<string, AudioClip>();
@@ -23,7 +24,6 @@ public class SoundManager : MonoBehaviour
     
     public NamedAudioClip[] bgmClipList;
     public NamedAudioClip[] sfxClipList;
-
     private Coroutine currentBGMCoroutine;
     private void Awake()
     {
@@ -129,5 +129,15 @@ public class SoundManager : MonoBehaviour
         }
 
         bgmSource.volume = inVolumeScale;
+    }
+
+    public void PlayReload(Vector3 position)
+    {
+        if (sfxClips.ContainsKey("Reload"))
+        {
+            reloadSource.Stop(); // 기존 소리 중단
+            reloadSource.clip = sfxClips["Reload"];
+            reloadSource.Play();
+        }
     }
 }

@@ -880,7 +880,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -1016,7 +1017,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -1103,6 +1105,7 @@ GameObject:
   - component: {fileID: 1339692898}
   - component: {fileID: 1339692900}
   - component: {fileID: 1339692899}
+  - component: {fileID: 1339692901}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -1139,14 +1142,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgmSource: {fileID: 1339692900}
   sfxSource: {fileID: 1339692899}
+  reloadSource: {fileID: 1339692901}
   bgmClipList:
-  - name: bgm
-    clip: {fileID: 8300000, guid: 897a8e287c65951409145c6de25ec878, type: 3}
+  - name: TitleScene
+    clip: {fileID: 8300000, guid: 8c1811000bbc01649b42010a36069be0, type: 3}
+  - name: MainScene
+    clip: {fileID: 8300000, guid: a4a2468a0978d964f9cb2e4af0719405, type: 3}
+  - name: TutorialScene
+    clip: {fileID: 8300000, guid: a4a2468a0978d964f9cb2e4af0719405, type: 3}
   sfxClipList:
   - name: FireSound
     clip: {fileID: 8300000, guid: 52eee3472cd0d7744a172523797ea3ea, type: 3}
-  - name: ChangeWeapon
-    clip: {fileID: 8300000, guid: 897a8e287c65951409145c6de25ec878, type: 3}
+  - name: WeaponChange
+    clip: {fileID: 8300000, guid: da4467ff6caa78547a8b2c0b84452218, type: 3}
+  - name: Step1
+    clip: {fileID: 8300000, guid: a7e392e612b05b84f83f64f38eae78e8, type: 3}
+  - name: Hit
+    clip: {fileID: 8300000, guid: 964c57a7df20ea94bbf08a737b2783a3, type: 3}
+  - name: Reload
+    clip: {fileID: 8300000, guid: ea53478ca78aaf545834884a4e5cae3b, type: 3}
+  - name: FlashLight
+    clip: {fileID: 8300000, guid: a3e4e7d7ed5b59246a1efad7f3766421, type: 3}
+  - name: ButtonClick
+    clip: {fileID: 8300000, guid: d47022e34f0a8e14e9b505f854a3fb95, type: 3}
+  - name: GetAmmo
+    clip: {fileID: 8300000, guid: ac8d55bfb86f6bd48a978b6f7cdbba1c, type: 3}
 --- !u!82 &1339692899
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1245,6 +1265,103 @@ AudioSource:
     m_PostInfinity: 2
     m_RotationOrder: 4
 --- !u!82 &1339692900
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339692896}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!82 &1339692901
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

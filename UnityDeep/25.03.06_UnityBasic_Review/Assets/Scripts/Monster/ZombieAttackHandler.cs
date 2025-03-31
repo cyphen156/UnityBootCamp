@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class ZombieAttackHandler : MonoBehaviour
 {
-    public LayerMask playerLayer = 3;
-    
+    public float damage = 7f;
+
     private void OnTriggerEnter(Collider other)
     {
-        if (((1 << other.gameObject.layer) & playerLayer) != 0)
+        if (other.gameObject.tag == "Player")
         {
+            other.gameObject.GetComponent<PlayerManager>().TakeDamage(damage);
             gameObject.SetActive(false);
         }
     }

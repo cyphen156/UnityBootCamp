@@ -16,7 +16,7 @@ public class ZombieManager : MonoBehaviour
     /// Die,
     /// Idle
     /// </summary>
-    public enum  EZombieState
+    public enum EZombieState
     {
         Patrol,     // 순찰
         Chase,      // 추적
@@ -45,7 +45,7 @@ public class ZombieManager : MonoBehaviour
         ZombieIdle
     }
     public EZombieState currentState = EZombieState.Idle;
-    
+
 
     public float HP = 10f;
     public float currentTime = 0f;
@@ -91,7 +91,7 @@ public class ZombieManager : MonoBehaviour
             ChangeCurrentState(EZombieState.Die);
             AIBehaviorControl();
             PlayAnimation();
-            
+
             //Destroy(gameObject);
         }
 
@@ -149,7 +149,7 @@ public class ZombieManager : MonoBehaviour
 
         // 상태가 바뀌면 해야 할 일을 작성하기
         currentState = state;
-        
+
         //if (stateRoutine != null)
         //{
         //    StopCoroutine(stateRoutine);
@@ -158,7 +158,7 @@ public class ZombieManager : MonoBehaviour
         //AIBehaviorControl();
     }
 
-    
+
     void AIBehaviorControl()
     {
         switch (currentState)
@@ -226,7 +226,7 @@ public class ZombieManager : MonoBehaviour
 
     void Chase(Transform target)
     {
-        Debug.Log("추적");        
+        Debug.Log("추적");
         Vector3 direction = (target.position - transform.position).normalized;
         transform.position += direction * moveSpeed * Time.deltaTime;
     }
@@ -287,6 +287,11 @@ public class ZombieManager : MonoBehaviour
             ChangeCurrentState(EZombieState.Chase);
         }
     }
+
+    public void TakeDamage(float damage)
+    {
+        HP -= damage; 
+    }
     //IEnumerator Attack()
     //{
     //    yield return new WaitForSeconds(nextAttackTime);
@@ -298,20 +303,20 @@ public class ZombieManager : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        //other.GetComponent<MeshRenderer>().material.color = Color.red;
-        if (other.gameObject.CompareTag("Player"))
-        {
-            Debug.Log("플레이어랑 충돌함");
-            GameObject player = other.gameObject;
-            if (player)
-            {
-                //playerManager.Weapon
-            }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    //other.GetComponent<MeshRenderer>().material.color = Color.red;
+    //    if (other.gameObject.CompareTag("Player"))
+    //    {
+    //        Debug.Log("플레이어랑 충돌함");
+    //        GameObject player = other.gameObject;
+    //        if (player)
+    //        {
+    //            //playerManager.Weapon
+    //        }
 
-            // 처음으로 돌아가라
-            player.GetComponent<PlayerManager>().ResetSequence();
-        }
-    }
+    //        // 처음으로 돌아가라
+    //        player.GetComponent<PlayerManager>().ResetSequence();
+    //    }
+    //}
 }
