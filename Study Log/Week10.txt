@@ -101,18 +101,18 @@ sql 테이블에서 varchar or char 의 차이는
 25.03.26
 Unity6 Deep
 #1 Lecture
-
+3D 프로젝트 
 
 25.03.27
 Unity6 Deep
 #1 Lecture
-
+3D프로젝트 발표 준비
 
 
 25.03.28
 Unity6 Deep
 #1 Lecture
-
+3D프로젝트 발표일
 
 번외
 // AppsPlyer, 렌더링 파이프라인좀 외워라
