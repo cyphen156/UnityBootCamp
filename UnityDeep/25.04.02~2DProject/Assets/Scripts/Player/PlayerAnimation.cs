@@ -12,12 +12,9 @@ public class PlayerAnimation : MonoBehaviour
     public void TriggerAttack()
     {
         animator.SetTrigger("Attack");
+
     }
 
-    public void TriggerJump()
-    {
-        animator.SetTrigger("Jump");
-    }
     public void SetWalking(bool isWalking)
     {
         animator.SetBool("IsWalking", isWalking);
@@ -38,5 +35,10 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetTrigger("Land");
         animator.SetBool("IsJumping", false);
         animator.SetBool("IsFalling", false);
+    }
+
+    public void PlayFootStepSound()
+    {
+        SoundManager.Instance.PlaySFX(SFXType.Run);
     }
 }

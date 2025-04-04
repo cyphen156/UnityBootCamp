@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
     public float moveSpeed = 5.0f;
     public float jumpForce = 10.0f;
 
@@ -15,6 +14,8 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundLayer;
 
     private PlayerAnimation playerAnimation;
+    public GameObject attackObj;
+    public bool isFliped = false;
 
     private void Start()
     {
@@ -31,11 +32,13 @@ public class PlayerMovement : MonoBehaviour
         {
             playerAnimation.SetWalking(moveInput != 0);
         }
-
         if (moveInput != 0)
         {
             GetComponent<SpriteRenderer>().flipX = moveInput < 0;
         }
+        
+        
+
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
@@ -43,8 +46,10 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             playerAnimation.SetJumping(true);
+            SoundManager.Instance.PlaySFX(SFXType.Jump);
         }
-        else if (!isGrounded)
+
+        else if (!isGrounded && rb.linearVelocity.y < -0.1f ) //³«ÇÏ»óÅÂ
         {
             playerAnimation?.SetFalling(true);
         }
@@ -55,4 +60,5 @@ public class PlayerMovement : MonoBehaviour
         }
 
     }
+    
 }
