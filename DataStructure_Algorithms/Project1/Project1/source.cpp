@@ -1,79 +1,183 @@
-/**
- * 백준 재귀함수가 뭔가요_17478
- *
- *
- * 제한사항
- *****************************************
- *
- *****************************************
- *
- *
- *
- * 주의
- *
- *
- * 풀이시간 0분
- */
-
-
 #include <iostream>
-#include <string>
+#include <algorithm>
+#include <vector>
 
 using namespace std;
 
-void RecursiveCall(int length, int originLength)
+bool LinearSearch(vector<int> linearList, int key);
+bool BSearch(vector<int> linearList, int key);
+int DuclicateBSearch(vector<int> linearList, int key);
+int LowerBoundSearch(vector<int> linearList, int key);
+int UpperBoundSearch(vector<int> linearList, int key);
+
+int main()
 {
-    for (int i = length; i < originLength; ++i)
-    {
-        cout << "____";
-    }
-    cout << "\"재귀함수가 뭔가요?\"\n";
+	vector<int> lList, lList2, upperList;
+	for (int i = 0; i < 10000; ++i)
+	{
+		lList.push_back(i);
+	}
 
-    if (length == 0)
-    {
-        for (int i = length; i < originLength; ++i)
-        {
-            cout << "____";
-        }
-        cout << "\"재귀함수는 자기 자신을 호출하는 함수라네\"\n";
-    }
-    else
-    {
-        for (int i = length; i < originLength; ++i)
-        {
-            cout << "____";
-        }
-        cout << "\"잘 들어보게. 옛날옛날 한 산 꼭대기에 이세상 모든 지식을 통달한 선인이 있었어.\n";
-        for (int i = length; i < originLength; ++i)
-        {
-            cout << "____";
-        }
 
-        cout << "마을 사람들은 모두 그 선인에게 수많은 질문을 했고, 모두 지혜롭게 대답해 주었지.\n";
-        for (int i = length; i < originLength; ++i)
-        {
-            cout << "____";
-        }
+	lList2 = {1, 2, 5, 5, 13, 13, 13, 13, 15, 17, 20};
+	upperList = {1, 3, 5, 7, 17, 17, 19, 20};
+	//LinearSearch();
+	BSearch(lList, 55);
+	cout << DuclicateBSearch(lList2, 13) << endl;
 
-        cout << "그의 답은 대부분 옳았다고 하네. 그런데 어느 날, 그 선인에게 한 선비가 찾아와서 물었어.\"\n";
-        RecursiveCall(length - 1, originLength);
-    }
-    for (int i = length; i < originLength; ++i)
-    {
-        cout << "____";
-    }
-    cout << "라고 답변하였지.\n";
+	cout << "Upperbound Test : " << UpperBoundSearch(upperList, 17) << endl;
+
+	return 0;
 }
 
-int main(void)
+
+bool LinearSearch(vector<int> linearList, int key)
 {
-    int N;
+	for (int i = 0; i < linearList.size(); ++i)
+	{
+		if (linearList[i] == key)
+		{
+			return true;
+		}
+	}
+	return false;
+};
 
-    cin >> N;
+bool BSearch(vector<int> linearList, int key)
+{
+	int cnt = 0;
+	int left = 0, right = linearList.size(); //right ==> 실제 인덱스 위치를 포함시키던지 사이즈 위치를 미포함시키던지
+	while (1)
+	{
+		int mid = left + (right - left) / 2;
+		// 만약 right가 매우 큰 수일 경우 오버플로우가 날 수 있음
+		cnt++;
+		if (linearList[mid] == key)
+		{
+			cout << "응 있어" << cnt << endl;
+			return true;
+		}
 
-    cout << "어느 한 컴퓨터공학과 학생이 유명한 교수님을 찾아가 물었다." << endl;
-    RecursiveCall(N, N);
+		else
+		{
+			if (linearList[mid] < key)
+			{
+				left = mid + 1;
+			}
+			else
+			{
+				right = mid;
+			}
+		}
 
-    return 0;
+		// 마지막 순회까지 다 탐색했어
+		if (left > right)
+		{
+			cout << "응 없서";
+			break;
+		}
+	}
+	return false;
 }
 
+int DuclicateBSearch(vector<int> linearList, int key)
+{
+	int cnt = 0;
+	int left = 0, right = linearList.size(); //right ==> 실제 인덱스 위치를 포함시키던지 사이즈 위치를 미포함시키던지
+	bool isFind = false;
+	
+	while (left < right)
+	{
+		int mid = left + (right - left) / 2;
+		// 만약 right가 매우 큰 수일 경우 오버플로우가 날 수 있음
+		cnt++;
+		// 찾앗는데 중복이 있을 수 있음
+		if (linearList[mid] == key)
+		{
+			isFind = true;
+			right = mid;
+		}	
+
+		// 아직 못찾았음
+		else if (linearList[mid] < key)
+		{
+			left = mid + 1;
+		}
+		else
+		{
+			right = mid;
+		}
+	}
+
+	if (isFind)
+	{
+		return 1;
+	}
+	return -1;
+}
+
+int LowerBoundSearch(vector<int> linearList, int key)
+{
+	int cnt = 0;
+	int left = 0, right = linearList.size(); //right ==> 실제 인덱스 위치를 포함시키던지 사이즈 위치를 미포함시키던지
+	int tempIDX = -1;
+	bool isFind = false;
+
+	while (left < right)
+	{
+		int mid = left + (right - left) / 2;
+		// 만약 right가 매우 큰 수일 경우 오버플로우가 날 수 있음
+		cnt++;
+
+
+		/**
+		* key와 같다 => 검색 범위를 왼쪽으로 옮긴다.
+		* key보다 작다 => 검색 범위를 왼쪽으로 옮긴다.
+		* key보다 크다 => 검색 범위를 오른쪽으로 옮긴다.
+		*/
+		if (linearList[mid] > key)
+		{
+			right = mid;
+			tempIDX = right;
+		}
+		else
+		{
+			left = mid + 1;
+		}
+	}
+	return tempIDX;
+}
+
+// 나보다 큰 애들을 찾는데 그중 가장 작은 애를 찾는다.
+int UpperBoundSearch(vector<int> linearList, int key)
+{
+	int cnt = 0;
+	int left = 0, right = linearList.size(); //right ==> 실제 인덱스 위치를 포함시키던지 사이즈 위치를 미포함시키던지
+	int tempIDX = -1;
+	bool isFind = false;
+
+	while (left < right)
+	{
+		int mid = left + (right - left) / 2;
+		// 만약 right가 매우 큰 수일 경우 오버플로우가 날 수 있음
+		cnt++;
+		/**
+		* key와 같다 => 검색 범위를 오른쪽으로 옮긴다.
+		* key보다 작다 => 검색 범위를 오른쪽으로 옮긴다.
+		* key보다 크다 => 검색 범위를 왼쪽으로 옮긴다.
+		*/
+
+		// 찾아온 놈이 키보다 작거나 같으면
+		if (linearList[mid] <= key)
+		{
+			left = mid + 1;
+		}
+		// 크면 찾는다.
+		else
+		{
+			right = mid;
+			tempIDX = right;
+		}
+	}
+	return tempIDX;
+}
