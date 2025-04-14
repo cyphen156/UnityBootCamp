@@ -1,6 +1,10 @@
-﻿  source.cpp
-C:\Project\UnityBootCamp\DataStructure_Algorithms\Project1\Project1\source.cpp(48,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Project\UnityBootCamp\DataStructure_Algorithms\Project1\Project1\source.cpp(85,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Project\UnityBootCamp\DataStructure_Algorithms\Project1\Project1\source.cpp(121,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Project\UnityBootCamp\DataStructure_Algorithms\Project1\Project1\source.cpp(145,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+﻿  main.cpp
+  Queue.cpp
+  Search.cpp
+C:\Project\UnityBootCamp\DataStructure_Algorithms\Project1\Project1\Search.cpp(49,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Project\UnityBootCamp\DataStructure_Algorithms\Project1\Project1\Search.cpp(86,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Project\UnityBootCamp\DataStructure_Algorithms\Project1\Project1\Search.cpp(122,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Project\UnityBootCamp\DataStructure_Algorithms\Project1\Project1\Search.cpp(155,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Stack.cpp
+  코드를 생성하고 있습니다...
   Project1.vcxproj -> C:\Project\UnityBootCamp\DataStructure_Algorithms\Project1\x64\Debug\Project1.exe

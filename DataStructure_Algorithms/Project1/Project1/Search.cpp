@@ -10,25 +10,25 @@ int DuclicateBSearch(vector<int> linearList, int key);
 int LowerBoundSearch(vector<int> linearList, int key);
 int UpperBoundSearch(vector<int> linearList, int key);
 
-int main()
-{
-	vector<int> lList, lList2, upperList;
-	for (int i = 0; i < 10000; ++i)
-	{
-		lList.push_back(i);
-	}
-
-
-	lList2 = {1, 2, 5, 5, 13, 13, 13, 13, 15, 17, 20};
-	upperList = {1, 3, 5, 7, 17, 17, 19, 20};
-	//LinearSearch();
-	BSearch(lList, 55);
-	cout << DuclicateBSearch(lList2, 13) << endl;
-
-	cout << "Upperbound Test : " << UpperBoundSearch(upperList, 17) << endl;
-
-	return 0;
-}
+//int main()
+//{
+//	vector<int> lList, lList2, upperList;
+//	for (int i = 0; i < 10000; ++i)
+//	{
+//		lList.push_back(i);
+//	}
+//
+//
+//	lList2 = {1, 2, 5, 5, 13, 13, 13, 13, 15, 17, 20};
+//	upperList = {1, 3, 5, 7, 17, 17, 19, 20};
+//	//LinearSearch();
+//	BSearch(lList, 55);
+//	cout << DuclicateBSearch(lList2, 13) << endl;
+//
+//	cout << "Upperbound Test : " << UpperBoundSearch(upperList, 17) << endl;
+//
+//	return 0;
+//}
 
 
 bool LinearSearch(vector<int> linearList, int key)
