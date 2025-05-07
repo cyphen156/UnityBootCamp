@@ -1,12 +1,13 @@
 25.04.21
 Data Structure / Algorithms
 #1 Lecture
-
+재귀함수의 구성 요소
+기저조건 :: 최소한 호출이 중단 될 수 있는 조건
+==> 함수가 종료되어 루프를 탈출 할 수 있도록 하는 조건
+재귀조간 :: 재귀가 일어날 수 있는 조건
 
 25.04.22
-Data Structure / Algorithms
-#1 Lecture
-
+예비군 훈련
 
 25.04.23
 Unity6 Deep

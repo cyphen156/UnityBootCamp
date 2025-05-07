@@ -23,22 +23,29 @@ public class PlayerMovement : MonoBehaviour
         playerAnimation = GetComponent<PlayerAnimation>();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            transform.position += new Vector3(-1, 0, 0);
+        }
+    }
     public void HandleMovement()
     {
-        float moveInput = Input.GetAxis("Horizontal");
-        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        //float moveInput = Input.GetAxis("Horizontal");
+        //rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
 
-        if (playerAnimation != null)
-        {
-            playerAnimation.SetWalking(moveInput != 0);
-        }
-        if (moveInput != 0)
-        {
-            GetComponent<SpriteRenderer>().flipX = moveInput < 0;
-        }
+        //if (playerAnimation != null)
+        //{
+        //    playerAnimation.SetWalking(moveInput != 0);
+        //}
+        //if (moveInput != 0)
+        //{
+        //    GetComponent<SpriteRenderer>().flipX = moveInput < 0;
+        //}
         
         
-
+        
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 

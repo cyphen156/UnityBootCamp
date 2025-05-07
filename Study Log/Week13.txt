@@ -94,12 +94,22 @@ front와 rear --> front가 dequeue 되어있는 상황으로 비어 있을 때 �
 25.04.15
 Data Structure / Algorithms
 #1 Lecture
+Stack / Queue 복습하기
+객체란 무엇인가????
+=> 행위의 주체, 명령을 내렸을 때 실행하는 것이 누구인가?
+
+SOLID
+
+S => Single Responsibility Principle
+==> 너는 다른거 하지말고 니 할 일만 해라! 
 
 
 25.04.16
 Unity6 Deep
 #1 Lecture
-
+PlayerStateManager
+GameManager
+상점
 
 25.04.17
 Unity6 Deep
