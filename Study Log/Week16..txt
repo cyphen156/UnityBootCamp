@@ -43,11 +43,45 @@ HTTP :: Protocol
 25.05.08
 NetWork Basic
 #1 Lecture
+Cisco PacketTracer 
+Network Topology Example
 
+DHCP Header
+ip addr 0.0.0.0 = Wildcard ip
+==> 아직 할당된게 없으니 모두 0
+
+Dest Addr => 255.255.255.255 = broadcast All
+==> DHCP 서버 어딧는지도 모르니까 찾아내야 한다
+-> 나와 연결된 모든 네트워크에 브로드캐스트 던져본다
+
+네트워크 주소 찾는법
+ 
+내 ip와 연결된 네트워크 ID + Host를 &&연산 한다
+-> 네트워크 주소의 호스트 ID는 항상 모든 비트가 0이니까 쉽게 찾을 수 있다.
+
+
+#2 Lecture
+Unity6 Netcode
+조건부 컴파일
+-> 실제 빌드시에는 제외 할 수 이씀
+Conditional Attributer
+
+
+SINGLETON
+:: 
+객체 지향 언어에서는 원칙적으로 전역 변수를 사용하지 못하도록 막고 있다
+--> 근데 전역적으로 관리를 해줄 뭔가가 필요한데?
+전역적으로 사용할 클래스를 하나 만들어두고 사용하자!
 
 
 25.05.09
 NetWork Basic
 #1 Lecture
+Review
 
+ifDev_
+{
+        
+}
+EndIF
 
