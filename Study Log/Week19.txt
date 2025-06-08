@@ -6,6 +6,11 @@ Team Project
 25.05.27
 Team Project
 #1 Lecture
+특강 인벤토리
+Domain Driven Design
+도메인..... 사람마다 정의하기에 따라 다른것
+-> 대충 여기서는 문제를 해결하고자 하는 영역
+
 
 
 25.05.28
@@ -20,4 +25,8 @@ Team Project
 
 25.05.30
 Team Project
-#1 Lecture
+발표일 
+
+4조 재훈이와 아이들
+ProjectK :: 배틀로얄짬뽕
+

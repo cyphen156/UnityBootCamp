@@ -1,23 +1,68 @@
 25.06.02
-Team Project
+AR/XR
 #1 Lecture
+Unity6 WebGL 빌드하기
+갤럭시.... 카메라 원가절감 이슈
+--> 거리뷰 할때 이슈가 생김
 
+MONO Build
+=> C#중간 언어를 사용하여 게임을 러닝
+
+IL2CPP
+=> CPP로 포팅하여 게임을 러닝
 
 25.06.03
-Team Project
-#1 Lecture
-
+선거 휴일
 
 25.06.04
-Team Project
+AR/XR
 #1 Lecture
+공변성과 반 공변성에 대한 정리
+공변성은 이벤트를 작성할 때 부모 타입을 반환에서 사용할 수 있도록 허용
+반 공변성은 매개변수를 자식 타입을 사용 할 수 있도록 허용
+delegate void Action A<in T> (T param)
+class A
+
+void funcAA(A a)
+{
+}
+
+class B : A
+
+void fucnBB(B b)
+
+
+Action<A> action
+
+action += funcAA
+action += funcBB
+
+in -> 반공변성
+
+out -> 공변성
+
+#2 Lecture
+Unity AR Project Init
+==> 
+25.06.04_AR_First
+
+인스턴스 위성 좌표계 변환기 
+MapLocation
+
+ILocationProvider
+SimulatedLocationProvider : ILocationProvider
+
+GPSLocaionService
 
 
 25.06.05
-Team Project
+AR/XR
 #1 Lecture
-
+좌표 변환의 흐름
+GPS -> ECEF (지구 무게중심 기준 월드 좌표 변환)
+==> 메르카르토 변환 투영
+====> 
+======> Unity Vec3
 
 25.06.06
-Team Project
-#1 Lecture
+현충일 휴일
