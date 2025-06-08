@@ -1,61 +1,64 @@
-using _25_06_04_AR_First.Mapping;
-using _25_06_04_AR_First.Services.GoogleMaps;
-using System;
+ï»¿using _25_06_04_AR_First.Services.GoogleMaps;
+using _25_06_04_AR_First.Services.GPS;
 using System.Collections;
 using UnityEngine;
 
-namespace _25_06_04_AR_First.Services.GPS
+namespace _25_06_04_AR_First.Mapping
 {
     /// <summary>
-    /// Maptile »ı¼º, °»½Å, Á¦°Å µîÀÇ °ü¸®
-    /// GPS µ¥ÀÌÅÍ°¡ ¹ş¾î³¯ ¶§ Å¸ÀÏ¸Ê È®Àå ¹× ¹İ´ë¹æÇâ Å¸ÀÏ¸Ê »èÁ¦
+    /// Maptile ìƒì„±, ê°±ì‹ , ì œê±° ë“±ì˜ ê´€ë¦¬
+    /// GPS ë°ì´í„°ê°€ ë²”ìœ„ë¥¼ ë²—ì–´ë‚ ë•Œ íƒ€ì¼ë§µ í™•ì¥ ë° ë°˜ëŒ€ë°©í–¥ íƒ€ì¼ë§µ ì‚­ì œ
     /// </summary>
     public class GoogleMapTileManager : MonoBehaviour
     {
-        [Header("Configuration")]
-        [SerializeField] GoogleStaticMapService _googleStaticMapService; // ±¸±Û ¸Ê Á¤Àû ÀÌ¹ÌÁö ¼­ºñ½º
-        [SerializeField] GPSLocationService _gpsLocationService; // GPS À§Ä¡ ¼­ºñ½º
-        [SerializeField] GoogleMapTile _mapTilePrefab;
-        [SerializeField] Transform _mapTileParent;
-
-        [Header("Debug")]
-        Vector2Int _currentCenterTile;
-
-        [Header("")]
-        GoogleMapTile[,] _mapTiles = new GoogleMapTile[3, 3];
-        readonly int[] TILE_OFFSETS = new int[] { -1, 0, 1 };
-
         public bool isInitialized { get; private set; }
 
-        private IEnumerator Start()
+        [Header("Configuration")]
+        [SerializeField] GoogleStaticMapService _googleStaticMapService;
+        [SerializeField] GPSLocationService _gpsLocationService;
+        [SerializeField] GoogleMapTile _mapTilePrefab;
+        [SerializeField] Transform _mapTilesParent;
+
+        [Header("Debug")]
+        Vector2Int _currentCenterTileCoord;
+
+        [Header("Managed mapTiles")]
+        GoogleMapTile[,] _mapTiles = new GoogleMapTile[3, 3];
+        readonly int[] TILE_OFFSETS = { -1, 0, 1 };
+
+
+        IEnumerator Start()
         {
             yield return new WaitUntil(() => _gpsLocationService.isReady);
             InitializeTiles();
             isInitialized = true;
         }
 
-        private void InitializeTiles()
+        /// <summary>
+        /// í˜„ì¬ GPS ê¸°ë°˜ìœ¼ë¡œ ì¤‘ì‹¬ íƒ€ì¼ ì¸ë±ìŠ¤ ê³„ì‚°
+        /// 3x3 ë°°ì—´ë¡œ MapTile ë“¤ ìƒì„±
+        /// </summary>
+        void InitializeTiles()
         {
-            _currentCenterTile = CalcTileCoordinate(_gpsLocationService.mapCenter);
-            CreateTiles(_currentCenterTile);
+            _currentCenterTileCoord = CalcTileCoordinate(_gpsLocationService.mapCenter);
+            CreateTiles(_currentCenterTileCoord);
         }
 
         void CreateTiles(Vector2Int center)
         {
-            // Áß½É ÀÎµ¦½º¸¦ ±âÁØÀ¸·Î ¸ğµç ¹æÇâ Å¸ÀÏ ÀÎµ¦½º °è»ê
-            for (int i = 0; i < TILE_OFFSETS.Length; ++i)
+            // ì¤‘ì‹¬ ì¸ë±ìŠ¤ ê¸°ì¤€ìœ¼ë¡œ ëª¨ë“  ë°©í–¥ íƒ€ì¼ë“¤ ì¸ë±ìŠ¤ ê³„ì‚°
+            for (int i = 0; i < TILE_OFFSETS.Length; i++)
             {
-                for (int j = 0; j < TILE_OFFSETS.Length; ++j)
+                for (int j = 0; j < TILE_OFFSETS.Length; j++)
                 {
-                    Vector2Int coord = new Vector2Int(
-                        center.x + TILE_OFFSETS[i],
-                        center.y + TILE_OFFSETS[i]);
+                    Vector2Int coord = new Vector2Int(center.x + TILE_OFFSETS[i],
+                                                      center.y + TILE_OFFSETS[j]);
 
-                    GoogleMapTile tile = Instantiate(_mapTilePrefab, _mapTileParent);
-                    tile.tileOffset = coord;
+                    GoogleMapTile tile = Instantiate(_mapTilePrefab, _mapTilesParent);
+                    tile.tileOffset = new Vector2Int(i - 1, j - 1);
                     tile.googleStaticMapService = _googleStaticMapService;
-                    tile.gpsLocationService = _gpsLocationService;
                     tile.zoomLevel = _gpsLocationService.mapTileZoomLevel;
+                    tile.gpsLocationService = _gpsLocationService;
                     tile.name = $"MapTile_{coord.x}_{coord.y}";
                     tile.transform.position = CalcWorldPosition(coord);
                     tile.RefreshMapTile();
@@ -64,52 +67,44 @@ namespace _25_06_04_AR_First.Services.GPS
             }
         }
 
+
         public Vector3 GetCenterTileWorldPosition()
         {
-            return CalcWorldPosition(_currentCenterTile);
-        }
-
-        private float CalcWorldPositionSpacing(int zoomLevel)
-        {
-            float delta = zoomLevel - 15f;
-            return 30f * Mathf.Pow(0.5f, delta);
+            return CalcWorldPosition(_currentCenterTileCoord);
         }
 
         /// <summary>
-        /// Å¸ÀÏ ÀÎµ¦½º·Î °ÔÀÓ ¿ùµå Æ÷Áö¼Ç »êÃâ
+        /// íƒ€ì¼ ì¸ë±ìŠ¤ë¡œ ê²Œì„ì›”ë“œ í¬ì§€ì…˜ ì‚°ì¶œ
         /// </summary>
-        /// <param name="coord"> Å¸ÀÏ ÀÎµ¦½º</param>
-        /// <returns> ¿ùµå À§Ä¡ </returns>
+        /// <param name="coord"> íƒ€ì¼ ì¸ë±ìŠ¤ </param>
+        /// <returns> ì›”ë“œ ìœ„ì¹˜ </returns>
         Vector3 CalcWorldPosition(Vector2Int coord)
         {
-            float spacing = CalcWorldPositionSpacing(_gpsLocationService.mapTileZoomLevel);
-            return new Vector3(coord.x+spacing, 0f, coord.y + spacing); // YÃàÀº ³ôÀÌ°ªÀ¸·Î ¼³Á¤
+            float spacing = 10;
+            return new Vector3(-coord.x * spacing, 0f, coord.y * spacing);
         }
 
+
         /// <summary>
-        /// ÇöÀç GPS À§Ä¡¸¦ ±âÁØÀ¸·Î Áß½É Å¸ÀÏ ÀÎµ¦½º °è»ê
-        /// 3X3 ¹è¿­·Î Mapile »ı¼º
+        /// íŠ¹ì • ìœ„ë„,ê²½ë„ì— í•´ë‹¹í•˜ëŠ” MapTile ì˜ ì¸ë±ìŠ¤ë¥¼ ê³„ì‚°
         /// </summary>
-        /// <param name="center"></param>
-        /// <returns></returns>
+        /// <param name="center"> MapTile ì„ ê·¸ë¦´ ìœ„ë„ê²½ë„ ì¤‘ì‹¬ </param>
+        /// <returns> MapTile ì¸ë±ìŠ¤ </returns>
         Vector2Int CalcTileCoordinate(MapLocation center)
         {
-            // ¸Ş¸£Ä«Åä¸£ ÇÈ¼¿ ÁÂÇ¥
+            // ë©”ë¥´ì¹´í† ë¥´ í”½ì…€ ì¢Œí‘œ (zoom = 21)
             int pixelX21 = GoogleMapUtils.LonToX(center.longitude);
             int pixelY21 = GoogleMapUtils.LatToY(center.latitude);
 
-            // Google map Zoomlevel 1´ç 2¹è¾¿ °ªÀÌ Áõ°¡ÇÏ¹Ç·Î,
-            // ÁÜ ·¹º§ Â÷ÀÌ ¸¸Å­ ¿À¸¥ÂÊÀ¸·Î Bit-Shift ¿¬»êÀ» ÅëÇØ ¿øÇÏ´À ÇÈ¼¿ ÁÂÇ¥¸¦ °è»ê
-            int shift = 21 - _mapTilePrefab.zoomLevel; // ÁÜ ·¹º§¿¡ µû¸¥ ½ÃÇÁÆ® °è»ê
+            // GoogleMap zoomlevel 1 ë‹¹ 2ë°°ì”© ê°’ì´ ì‘ì•„ì§€ê¸°ë•Œë¬¸ì— (ê³µì‹ë¬¸ì„œì°¸ì¡°)
+            // ZoomLevel ì°¨ì´ë§Œí¼ ì˜¤ë¥¸ìª½ìœ¼ë¡œ Bit-Shift í•˜ë©´ ì›í•˜ëŠ” í”½ì…€ê°’ì„ êµ¬í• ìˆ˜ìˆë‹¤.
+            int shift = 21 - _gpsLocationService.mapTileZoomLevel;
+            int pixelX = pixelX21 >> shift;
+            int pixelY = pixelY21 >> shift;
 
-            int pixelX = pixelX21 >> shift; // ÁÜ ·¹º§¿¡ µû¸¥ ÇÈ¼¿ X ÁÂÇ¥
-            int pixelY = pixelY21 >> shift; // ÁÜ ·¹º§¿¡ µû¸¥ ÇÈ¼¿ Y ÁÂÇ¥
-
-            // MapTile ´ç ÇÈ¼¿¼ö·Î ³ª´©¸é ÀÎµ¦½º ±¸ÇÒ ¼ö ÀÖÀ½
-
-            return new Vector2Int(
-                Mathf.RoundToInt(pixelX / (float)_gpsLocationService.mapTileSizePixels), // Å¸ÀÏ Å©±â·Î ³ª´©¾î Å¸ÀÏ ÀÎµ¦½º °è»ê
-                Mathf.RoundToInt(pixelY / (float)_gpsLocationService.mapTileSizePixels));
+            // MapTile ë‹¹ í”½ì…€ìˆ˜ë¡œ ë‚˜ëˆ„ë©´ ì¸ë±ìŠ¤ êµ¬í• ìˆ˜ìˆìŒ
+            return new Vector2Int(Mathf.FloorToInt(pixelX / (float)_gpsLocationService.mapTileSizePixels),
+                                  Mathf.FloorToInt(pixelY / (float)_gpsLocationService.mapTileSizePixels));
         }
     }
 }

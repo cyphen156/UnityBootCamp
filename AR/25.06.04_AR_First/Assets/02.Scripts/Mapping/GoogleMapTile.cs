@@ -1,6 +1,5 @@
 ﻿using _25_06_04_AR_First.Services.GoogleMaps;
 using _25_06_04_AR_First.Services.GPS;
-using System;
 using UnityEngine;
 
 namespace _25_06_04_AR_First.Mapping
@@ -8,21 +7,22 @@ namespace _25_06_04_AR_First.Mapping
     public class GoogleMapTile : MonoBehaviour
     {
         [Header("Map Settings")]
-        [Range(1, 20)] //즘레벨 설정
-        public int zoomLevel = 15; // Zoom level of the map tile
+        [Tooltip("줌 레벨")]
+        [Range(1, 20)]
+        public int zoomLevel = 15;
 
+        [Tooltip("맵 텍스쳐 사이즈")]
         [Range(64, 1024)]
-        [Tooltip("타일 크기")]
-        public int size = 640; // Size of the tile in pixels
+        public int size = 640;
 
         [Tooltip("월드 맵 원점")]
         public MapLocation worldCenterLocation;
 
         [Header("Tile Settings")]
-        [Tooltip("타일의 오프셋")]
-        public Vector2 tileOffset;
+        [Tooltip("타일링을 위한 오프셋")]
+        public Vector2Int tileOffset;
 
-        [Tooltip("오프셋을 적용한 맵의 중심 위치")]
+        [Tooltip("오프셋 적용한 맵의 중심 위치")]
         public MapLocation tileCenterLocation;
 
         [Header("Map Services")]
@@ -31,58 +31,62 @@ namespace _25_06_04_AR_First.Mapping
         [Header("GPS Services")]
         public GPSLocationService gpsLocationService
         {
-            get => gpsLocationService;
+            get => _gpsLocationService;
             set
             {
+                if (value == _gpsLocationService)
+                    return;
+
                 if (value != null)
                 {
-                    if (gpsLocationService != null)
+                    if (_gpsLocationService != null)
                     {
-                        gpsLocationService.onMapRedraw -= RefreshMapTile;
+                        _gpsLocationService.onMapRedraw -= RefreshMapTile;
                     }
+
                     value.onMapRedraw += RefreshMapTile;
                 }
+
+                _gpsLocationService = value;
             }
         }
 
-        private MeshRenderer _renderer;
+        private GPSLocationService _gpsLocationService;
 
-        public void Awake()
-        {
-            _renderer = GetComponent<MeshRenderer>();
-        }
+        private Renderer _renderer;
 
-        public void Start()
+
+        private void Awake()
         {
-            RefreshMapTile();
+            _renderer = GetComponent<Renderer>();
         }
 
         public void RefreshMapTile()
         {
+            // 오프셋에따른 중심위치 계산
             tileCenterLocation.latitude = GoogleMapUtils.AdjustLatByPixels(
                 worldCenterLocation.latitude,
                 (int)(size * tileOffset.y),
                 zoomLevel);
-            tileCenterLocation.longitude = GoogleMapUtils.AdjustLatByPixels(
+
+            tileCenterLocation.longitude = GoogleMapUtils.AdjustLonByPixels(
                 worldCenterLocation.longitude,
                 (int)(size * tileOffset.x),
                 zoomLevel);
 
-            googleStaticMapService.LoadMap(
-                tileCenterLocation.latitude, 
-                tileCenterLocation.longitude, 
-                zoomLevel, 
-                new Vector2(size, size), 
-                OnMapLoaded);
+            // 맵 텍스쳐 요청
+            googleStaticMapService.LoadMap(tileCenterLocation.latitude,
+                                           tileCenterLocation.longitude,
+                                           zoomLevel,
+                                           new Vector2(size, size),
+                                           OnMapLoaded);
         }
 
         private void OnMapLoaded(Texture2D texture)
         {
             if (_renderer.material.mainTexture != null)
-            {
                 Destroy(_renderer.material.mainTexture);
-            }
-         
+
             _renderer.material.mainTexture = texture;
         }
     }

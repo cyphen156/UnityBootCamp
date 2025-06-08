@@ -1,18 +1,14 @@
 using System;
-using UnityEngine;
 
 namespace _25_06_04_AR_First.Services.GPS
 {
-    /// <summary>
-    /// Interface for location provider services.
-    /// </summary>
     public interface ILocationProvider
     {
         /// <summary>
         /// 위도
         /// </summary>
         double latitude { get; }
-        
+
         /// <summary>
         /// 경도
         /// </summary>
@@ -24,15 +20,18 @@ namespace _25_06_04_AR_First.Services.GPS
         double altitude { get; }
 
         /// <summary>
-        /// Latitude
-        /// Longitude
-        /// Altitude
-        /// Accuracy
-        /// Timestamp
+        /// latitude, longitude, altitude, horizontalAccuracy, timestamp
         /// </summary>
-        event Action<double, double, double, float, double> OnLocationChanged;
+        event Action<double, double, double, float, double> onLocationUpdated;
 
+        /// <summary>
+        /// 위치 데이터 갱신 시작
+        /// </summary>
         void StartService();
+
+        /// <summary>
+        /// 위치 데이터 갱신 종료
+        /// </summary>
         void StopService();
     }
 }

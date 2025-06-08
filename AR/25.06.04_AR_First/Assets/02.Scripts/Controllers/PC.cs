@@ -1,60 +1,64 @@
+using _25_06_04_AR_First.Mapping;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace _25_06_04_AR_First.Services.GPS
+namespace _25_06_04_AR_First.Controllers
 {
-    public class PlayerController : MonoBehaviour
+    public class PC : MonoBehaviour
     {
-        // 뉴 인풋 시스템을 사용하여 플레이어의 이동을 제어합니다.
-        [SerializeField] InputActionReference _moveInputAction;
-        [SerializeField] GoogleMapTileManager _mapTileManager;
-
 #if UNITY_EDITOR
         public Vector3 velocity;
-        public Vector3 direction; 
+        public Vector3 direction;
         public float speed = 5f;
-#endif
 
-        private IEnumerator Start()
+        [SerializeField] GoogleMapTileManager _mapTileManager;
+        [SerializeField] InputActionReference _moveInputAction;
+
+
+        IEnumerator Start()
         {
             yield return new WaitUntil(() => _mapTileManager.isInitialized);
             transform.position = _mapTileManager.GetCenterTileWorldPosition();
         }
 
-
-        public void OnEnable()
+        private void OnEnable()
         {
             _moveInputAction.action.performed += OnMovePerformed;
-            _moveInputAction.action.canceled += OnMoveCancled;
+            _moveInputAction.action.canceled += OnMoveCanceled;
             _moveInputAction.action.Enable();
         }
 
-        public void OnDisable()
+        private void OnDisable()
         {
             _moveInputAction.action.performed -= OnMovePerformed;
-            _moveInputAction.action.canceled -= OnMoveCancled;
+            _moveInputAction.action.canceled -= OnMoveCanceled;
             _moveInputAction.action.Disable();
         }
 
         private void OnMovePerformed(InputAction.CallbackContext context)
         {
-            Vector2 input = context.ReadValue<Vector2>();
-            direction = new Vector3(input.x, 0, input.y).normalized;
+            Vector2 input2D = context.ReadValue<Vector2>();
+            direction = new Vector3(input2D.x, 0f, input2D.y);
         }
 
-        private void OnMoveCancled(InputAction.CallbackContext context)
+        private void OnMoveCanceled(InputAction.CallbackContext context)
         {
-            velocity = Vector3.zero;
+            direction = Vector3.zero;
         }
 
         private void FixedUpdate()
         {
-            if (velocity.sqrMagnitude > speed)
+            if (direction.sqrMagnitude > 0)
             {
                 velocity = direction * speed;
                 transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
             }
+            else
+            {
+                velocity = Vector3.zero;
+            }
         }
+#endif
     }
 }

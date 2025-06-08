@@ -1,7 +1,10 @@
 ﻿using System;
 
-namespace _25_06_04_AR_First.Services.GPS
+namespace _25_06_04_AR_First.Mapping
 {
+    /// <summary>
+    /// 맵 위치 데이터
+    /// </summary>
     [Serializable]
     public struct MapLocation
     {
@@ -11,7 +14,8 @@ namespace _25_06_04_AR_First.Services.GPS
             this.longitude = longitude;
         }
 
-        public double latitude;     // 위도
-        public double longitude;    // 경도
+
+        public double latitude; // 위도
+        public double longitude; // 경도
     }
 }
