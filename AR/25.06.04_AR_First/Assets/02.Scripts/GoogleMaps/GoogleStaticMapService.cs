@@ -8,7 +8,7 @@ namespace _25_06_04_AR_First.Services.GoogleMaps
     public class GoogleStaticMapService : MonoBehaviour
     {
         private const string BASE_URL = "https://maps.googleapis.com/maps/api/staticmap?";
-        private const string API_KEY = "AIzaSyDqYVb-C0TTNAtDfewlZKnMmqYql9nLDss";
+        private const string API_KEY = "AIzaSyB__gBIDgXhalA4O0MeZRSG_lw0sXt1bMo";
         private Texture2D _cachedTexture;
 
 

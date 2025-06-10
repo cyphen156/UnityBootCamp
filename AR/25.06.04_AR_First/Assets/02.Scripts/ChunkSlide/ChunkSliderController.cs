@@ -41,10 +41,18 @@ namespace _25_06_04_AR_First.ChunkSlide
             _currentMousePosition = newMousePosition;
 
             Vector2Int newCoord = GetChunkCoordFromPosition(_currentMousePosition);
+
+            // 만약 기존 좌표에서 벗어났다면
             if (newCoord != _currentCenterCoord)
             {
+                // 방향 설정해주고
                 Vector2Int direction = newCoord - _currentCenterCoord;
-                _chunkManager.SlideChunks(direction);
+
+
+                // ChunkManager에 슬라이드 요청
+                _chunkManager.SlideChunks(_currentCenterCoord, newCoord, direction);
+
+                // 중앙 좌표 업데이트
                 _currentCenterCoord = newCoord;
             }
         }

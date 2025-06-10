@@ -1,5 +1,7 @@
 ﻿using _25_06_04_AR_First.Mapping;
+using _25_06_04_AR_First.Utils;
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace _25_06_04_AR_First.Services.GPS
@@ -42,7 +44,6 @@ namespace _25_06_04_AR_First.Services.GPS
 
         private ILocationProvider _locationProvider;
 
-
         private void Awake()
         {
 #if UNITY_EDITOR
@@ -50,10 +51,16 @@ namespace _25_06_04_AR_First.Services.GPS
             simulatedLocationProvider.target = _simulationTarget;
             simulatedLocationProvider.startLocation = _simulationStartLocation;
             _locationProvider = simulatedLocationProvider;
-            isReady = true;
+            timeStamp = Epoch.Now;
 #else
             _locationProvider = gameObject.AddComponent<DeviceLocationProvider>();
 #endif
+        }
+
+        IEnumerator Start()
+        {
+            yield return new WaitUntil(() => _locationProvider.isRunning);
+            isReady = true;
         }
 
         private void OnEnable()
@@ -76,7 +83,7 @@ namespace _25_06_04_AR_First.Services.GPS
             accuracy = newAccuracy;
             timeStamp = newTimeStamp;
 
-            if (mapEnvelope.Contains(new MapLocation(latitude, longitude)) == false)
+            //if (mapEnvelope.Contains(new MapLocation(latitude, longitude)) == false)
             {
                 CenterMap();
             }

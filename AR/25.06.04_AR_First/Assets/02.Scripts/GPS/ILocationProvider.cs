@@ -5,6 +5,11 @@ namespace _25_06_04_AR_First.Services.GPS
     public interface ILocationProvider
     {
         /// <summary>
+        /// 동작중
+        /// </summary>
+        bool isRunning { get; }
+
+        /// <summary>
         /// 위도
         /// </summary>
         double latitude { get; }

@@ -1,4 +1,3 @@
-using _25_06_04_AR_First.ChunkSlide;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -48,7 +47,7 @@ public class ChunkManager : MonoBehaviour
         }
     }
 
-    public void SlideChunks(Vector2Int direction)
+    public void SlideChunks(Vector2Int oldCenter, Vector2Int newCenter, Vector2Int direction)
     {
         
     }
