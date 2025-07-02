@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-348483996767539122
+--- !u!114 &-8043070220250507006
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MapUnit
-  m_Shader: {fileID: -6465566751694194690, guid: 925b21784f766b141a431fdac10bbfe5, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 688f2c3ab76ad5746aaf5262e5dd679f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -59,8 +59,8 @@ Material:
     - _QueueOffset: 0
     m_Colors:
     - _CameraOffset: {r: 0, g: 0, b: 0, a: 0}
-    - _Color: {r: 0.11392652, g: 0.040005345, b: 0.2924528, a: 1}
-    - _Curve: {r: 0, g: -0.05, b: 0, a: 0}
+    - _Color: {r: 0, g: 1, b: 0.8703723, a: 0}
+    - _Curve: {r: 0, g: 0, b: 0, a: 0}
     - _Emission: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

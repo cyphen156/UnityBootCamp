@@ -2,18 +2,20 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    [Header("Map settings")]
     [SerializeField] GameObject _mapUnitPrefab;
     [SerializeField] int _initSpawnCount = 20;
     [SerializeField] float _mapUnitLengthZ = 2f;
     [SerializeField] float _baseZOffset = -10f;
     [SerializeField] float _speed = 3f;
 
-    Transform[] _mapUnits;
-    int[] _unitIndices;
+    private Transform[] _mapUnits;
+    private int[] _unitIndices;
+    AudioSource _audioSource;
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.clip = GameManager.gameSession.selectedSongSpec.audioClip;
         GameManager.gameSession.playSpeed = _speed;
     }
 
@@ -22,7 +24,7 @@ public class LevelManager : MonoBehaviour
         _mapUnits = new Transform[_initSpawnCount];
         _unitIndices = new int[_initSpawnCount];
 
-        for (int i = 0; i < _initSpawnCount; i++)
+        for(int i = 0; i < _initSpawnCount; i++)
         {
             GameObject mapUnit = Instantiate(_mapUnitPrefab, transform);
             _mapUnits[i] = mapUnit.transform;
@@ -38,11 +40,11 @@ public class LevelManager : MonoBehaviour
         float scrollZ = Time.time * _speed;
         float recycleThreshold = _baseZOffset - _mapUnitLengthZ;
 
-        for (int i = 0; i < _mapUnits.Length; i++)
+        for(int i = 0; i < _mapUnits.Length; i++)
         {
             float z = _baseZOffset + _unitIndices[i] * _mapUnitLengthZ - scrollZ;
 
-            if (z < recycleThreshold)
+            if(z < recycleThreshold)
             {
                 _unitIndices[i] += _initSpawnCount;
                 z = _baseZOffset + _unitIndices[i] * _mapUnitLengthZ - scrollZ;
