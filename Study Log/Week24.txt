@@ -1,23 +1,34 @@
-25.06.09
+25.06.30
 AR/XR
 #1 Lecture
 
 
-25.06.10
+25.07.01
 AR/XR
 #1 Lecture
 
 
-25.06.11
+25.07.02
 AR/XR
 #1 Lecture
 
 
-25.06.12
+25.07.03
 AR/XR
-#1 Lecture
+#1 UCA 특강
+Opaque - 불투명 매시 / Rusty Metal
+Cutout - Perforated Steel Screens 
+Fade - 애니메이션
+Transparent(투명도)
+
+텍스트가 박스 바운드 안에 모두 표현 되도록 주는 옵션은 : Best Fit
+
+Mesh, Bones, Skin weights, Animation을 포함할 수 있는 파일은 FBX파일
+Area Light는 Baked Only
+
+Emission - Cookie = Baked 그림자 효과 깔릴때
 
 
-25.06.13
+25.07.04
 AR/XR
 #1 Lecture
